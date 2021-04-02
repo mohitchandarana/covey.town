@@ -6,7 +6,8 @@ import {
   Heading,  
   Image,
   Select,
-  Stack
+  Stack,
+  Text
 } from '@chakra-ui/react';
 import { BsFillInfoCircleFill } from 'react-icons/bs'
 import useCoveyAppState from '../../hooks/useCoveyAppState';
@@ -29,11 +30,9 @@ export default function Profile(): JSX.Element {
     <IntroContainer>
       
       <Stack>
-        <Box p="4" borderWidth="1px" borderRadius="lg">
-          <Center h="50px">
-            <Heading as="h1" size="lg">Profile Page</Heading>
-          </Center>    
-        </Box>
+        <Center h="50px">
+          <Heading as="h1" size="lg">Profile Page</Heading>
+        </Center>    
         <Box p="4" borderWidth="1px" borderRadius="lg">
           <Center>
             <Heading as="h2" size="md">Current User Avatar</Heading>
@@ -48,9 +47,10 @@ export default function Profile(): JSX.Element {
           </Center>
         </Box>
         <Box p="4" borderWidth="1px" borderRadius="lg">
-          <h2> <BsFillInfoCircleFill/>To change the current Avatar, select one from the Dropdown Menu</h2> 
-        </Box>
-        <Box p="4" borderWidth="1px" borderRadius="lg">
+          <Stack direction="row">
+            <BsFillInfoCircleFill/> <Text fontSize="lg">To change the current Avatar, select one from the Dropdown Menu </Text>
+          </Stack>
+        
           <Center>
             <Heading as="h2" size="sm">Selection Preview</Heading>
           </Center>   
@@ -65,14 +65,12 @@ export default function Profile(): JSX.Element {
           </Center>
         </Box>
         <Stack direction="row">
-          <Select
-            value={currentAvatar}
-            onChange={handleChange} >
-            <option value="misa">Tuxemon Misa </option>
-            <option value="catgirl">Tuxemon Catgirl</option>
-            <option value="female">Tuxemon Spooky </option>
-            <option value="childactor">Tuxemon ChildActor</option>
-            <option value="beachcomber">Tuxemon BeachComber </option>
+          <Select onChange={handleChange}>
+            <option value="misa">Misa </option>
+            <option value="catgirl">Catgirl</option>
+            <option value="female">Spooky </option>
+            <option value="childactor">ChildActor</option>
+            <option value="beachcomber">BeachComber </option>
           </Select>
           <Button colorScheme="blue" onClick={handleSave}> Save </Button>
         </Stack>
