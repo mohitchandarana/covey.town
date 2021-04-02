@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   Box,
+  Button,
   Center,
   Heading,  
   Image,
@@ -18,6 +19,10 @@ export default function Profile(): JSX.Element {
   const [ avatarPreview, setAvatarPreview ] = useState<string>('misa');
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setAvatarPreview(event.target.value)
+  }
+
+  const handleSave = () => {
+    // Todo: add logic
   }
 
   return (
@@ -59,16 +64,19 @@ export default function Profile(): JSX.Element {
             />
           </Center>
         </Box>
-
-        <Select
-          value={currentAvatar}
-          onChange={handleChange} >
-          <option value="misa">Tuxemon Misa </option>
-          <option value="catgirl">Tuxemon Catgirl</option>
-          <option value="female">Tuxemon Spooky </option>
-          <option value="childactor">Tuxemon ChildActor</option>
-          <option value="beachcomber">Tuxemon BeachComber </option>
-        </Select>
+        <Stack direction="row">
+          <Select
+            value={currentAvatar}
+            onChange={handleChange} >
+            <option value="misa">Tuxemon Misa </option>
+            <option value="catgirl">Tuxemon Catgirl</option>
+            <option value="female">Tuxemon Spooky </option>
+            <option value="childactor">Tuxemon ChildActor</option>
+            <option value="beachcomber">Tuxemon BeachComber </option>
+          </Select>
+          <Button colorScheme="blue" onClick={handleSave}> Save </Button>
+        </Stack>
+        
       </Stack>
     </IntroContainer>
   );
