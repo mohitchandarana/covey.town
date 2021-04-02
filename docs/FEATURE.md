@@ -14,5 +14,14 @@ Feature Update 1 - Creating and Saving A User Profile
 
 Feature Update 2 - Choosing an Avatar and saving it to Profile
 
+- Step 1: Login/Sign up (Avatar customization is only available to users with a profile)
+
+  - Step 2: Click on your name (in the welcome message that says (Welcome, <your name>) to go to your profile)
+
+  - Step 3: You will see your current avatar (default is misa) and a dropdown menu with available options
+
+  - Step 4: Choose an avatar from the dropdown menu if you wish to change it (you'll see a preview of your selection above the drop down menu)
+
+  - Step 5: If you're happy with your selection, click Save and your avatar choice will be saved to your profile
 
 Feature Update 3 - Saving a Created Town (Public/Private) to Profile
