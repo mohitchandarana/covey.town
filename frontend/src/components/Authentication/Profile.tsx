@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
+import assert from "assert";
 import {
   Box,
   Button,
@@ -7,50 +8,84 @@ import {
   Image,
   Select,
   Stack,
-  Text
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  useToast
 } from '@chakra-ui/react';
 import { BsFillInfoCircleFill } from 'react-icons/bs'
-// import useCoveyAppState from '../../hooks/useCoveyAppState';
-import IntroContainer from '../VideoCall/VideoFrontend/components/IntroContainer/IntroContainer';
+import { useAuth0 } from "@auth0/auth0-react";
+import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
+import Video from '../../classes/Video/Video';
+import { CoveyTownInfo, TownJoinResponse, } from '../../classes/TownsServiceClient';
 
-export default function Profile(): JSX.Element {
-//   const { myPlayerID, players } = useCoveyAppState();
+interface ProfileProps {
+  doLogin: (initData: TownJoinResponse) => Promise<boolean>
+}
 
-  // const { displayName, id } = useUserProfile();
-
-//   const myPlayer = players.find((player) => player.id === myPlayerID);
-
-//   let currentAvatar = myPlayer?.currentAvatar || 'misa';
-  
-  // eslint-disable-next-line no-console
-  // console.log(`display name = ${displayName}`);
-  // // eslint-disable-next-line no-console
-  // console.log(`id = ${id}`);
+export default function Profile({ doLogin }: ProfileProps): JSX.Element {
 
   const [ currentAvatarPreview, setCurrentAvatarPreview ] = useState<string>('misa');
   const [ avatarPreview, setAvatarPreview ] = useState<string>('misa');
+  const [userName, setUserName] = useState<string>(Video.instance()?.userName || '');
+  const { connect } = useVideoContext();
+  const { user, isAuthenticated } = useAuth0();
+  if (isAuthenticated) {
+    setUserName(user.given_name  || user.nickname);
+  }
+  // TODO: getSavedTownsFromDataBase()
+  const currentlySavedTowns: CoveyTownInfo[] = [];
+  const toast = useToast();
+
+  const handleJoin = useCallback(async (coveyRoomID: string) => {
+    try {
+      if (!userName || userName.length === 0) {
+        toast({
+          title: 'Unable to join town',
+          description: 'Please select a username',
+          status: 'error',
+        });
+        return;
+      }
+      if (!coveyRoomID || coveyRoomID.length === 0) {
+        toast({
+          title: 'Unable to join town',
+          description: 'Please enter a town ID',
+          status: 'error',
+        });
+        return;
+      }
+      const initData = await Video.setup(userName, coveyRoomID);
+
+      const loggedIn = await doLogin(initData);
+      if (loggedIn) {
+        assert(initData.providerVideoToken);
+        await connect(initData.providerVideoToken);
+      }
+    } catch (err) {
+      toast({
+        title: 'Unable to connect to Towns Service',
+        description: err.toString(),
+        status: 'error'
+      })
+    }
+  }, [doLogin, userName, connect, toast]);
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setAvatarPreview(event.target.value);
   }
 
   const handleSave = () => {
-    // setCurrentAvatarPreview(avatarPreview);  
-    // if (myPlayer !== undefined) {
-    //     currentAvatar = avatarPreview;
-    //     myPlayer.currentAvatar = currentAvatar;
-    //     // eslint-disable-next-line no-console
-    //     console.log(`playerid = ${myPlayerID}`);
-    //     // eslint-disable-next-line no-console
-    //     console.log(`player avatar = ${myPlayer.currentAvatar}`);
-    //     // eslint-disable-next-line no-console
-    //     console.log(`id from player object = ${myPlayer.id}`);
-    // }
+    setCurrentAvatarPreview(avatarPreview);  
+    // TODO: Add Database function
   }
 
   return (
-    <IntroContainer>
-      
+    <>
       <Stack>
         <Center h="50px">
           <Heading as="h1" size="lg">Profile Page</Heading>
@@ -97,7 +132,23 @@ export default function Profile(): JSX.Element {
           <Button colorScheme="blue" onClick={handleSave}> Save </Button>
         </Stack>
         
+        <Heading p="4" as="h4" size="md">Saved Towns</Heading>
+            <Box maxH="500px" overflowY="scroll">
+              <Table>
+                <Thead><Tr><Th>Room Name</Th><Th>Room ID</Th><Th>Activity</Th></Tr></Thead>
+                <Tbody>
+                  {currentlySavedTowns?.map((town) => (
+                    <Tr key={town.coveyTownID}><Td role='cell'>{town.friendlyName}</Td><Td
+                      role='cell'>{town.coveyTownID}</Td>
+                      <Td role='cell'>{town.currentOccupancy}/{town.maximumOccupancy}
+                        <Button onClick={() => handleJoin(town.coveyTownID)}
+                                disabled={town.currentOccupancy >= town.maximumOccupancy}>Connect</Button></Td></Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Box>
       </Stack>
-    </IntroContainer>
+    </>
   );
 } 
+
