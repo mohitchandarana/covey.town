@@ -10,20 +10,42 @@ import {
   Text
 } from '@chakra-ui/react';
 import { BsFillInfoCircleFill } from 'react-icons/bs'
-import useCoveyAppState from '../../hooks/useCoveyAppState';
+// import useCoveyAppState from '../../hooks/useCoveyAppState';
 import IntroContainer from '../VideoCall/VideoFrontend/components/IntroContainer/IntroContainer';
 
 export default function Profile(): JSX.Element {
-  const { myPlayerID, players } = useCoveyAppState();
-  const myPlayer = players.find((player) => player.id === myPlayerID);
-  const [ currentAvatar, setCurrentAvatar ] = useState<string>(myPlayer?.currentAvatar || 'misa');
+//   const { myPlayerID, players } = useCoveyAppState();
+
+  // const { displayName, id } = useUserProfile();
+
+//   const myPlayer = players.find((player) => player.id === myPlayerID);
+
+//   let currentAvatar = myPlayer?.currentAvatar || 'misa';
+  
+  // eslint-disable-next-line no-console
+  // console.log(`display name = ${displayName}`);
+  // // eslint-disable-next-line no-console
+  // console.log(`id = ${id}`);
+
+  const [ currentAvatarPreview, setCurrentAvatarPreview ] = useState<string>('misa');
   const [ avatarPreview, setAvatarPreview ] = useState<string>('misa');
+
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setAvatarPreview(event.target.value)
+    setAvatarPreview(event.target.value);
   }
 
   const handleSave = () => {
-    // Todo: add logic
+    // setCurrentAvatarPreview(avatarPreview);  
+    // if (myPlayer !== undefined) {
+    //     currentAvatar = avatarPreview;
+    //     myPlayer.currentAvatar = currentAvatar;
+    //     // eslint-disable-next-line no-console
+    //     console.log(`playerid = ${myPlayerID}`);
+    //     // eslint-disable-next-line no-console
+    //     console.log(`player avatar = ${myPlayer.currentAvatar}`);
+    //     // eslint-disable-next-line no-console
+    //     console.log(`id from player object = ${myPlayer.id}`);
+    // }
   }
 
   return (
@@ -42,7 +64,7 @@ export default function Profile(): JSX.Element {
             <Image
               boxSize="100px"
               objectFit="contain"
-              src={`${process.env.PUBLIC_URL}/assets/atlas/tuxemon-${currentAvatar}/${currentAvatar}-front.png`}
+              src={`${process.env.PUBLIC_URL}/assets/atlas/tuxemon-${currentAvatarPreview}/${currentAvatarPreview}-front.png`}
             />
           </Center>
         </Box>
@@ -65,7 +87,7 @@ export default function Profile(): JSX.Element {
           </Center>
         </Box>
         <Stack direction="row">
-          <Select onChange={handleChange}>
+          <Select variant="filled" onChange={handleChange}>
             <option value="misa">Misa </option>
             <option value="catgirl">Catgirl</option>
             <option value="female">Spooky </option>

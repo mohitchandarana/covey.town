@@ -32,7 +32,7 @@ export default function PreJoinScreens(props: { doLogin: (initData: TownJoinResp
   return (
     <IntroContainer>
       <div className={buttonContainer}>
-        <AuthHero />
+        <AuthHero/>
       </div>
       <Heading as="h3" size="lg">{welcomeMessage}</Heading>
       <Text p="4">
