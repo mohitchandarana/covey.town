@@ -22,6 +22,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
 import Video from '../../classes/Video/Video';
 import { CoveyTownInfo, TownJoinResponse, } from '../../classes/TownsServiceClient';
+import IntroContainer from '../VideoCall/VideoFrontend/components/IntroContainer/IntroContainer';
 
 interface ProfileProps {
   doLogin: (initData: TownJoinResponse) => Promise<boolean>
@@ -31,12 +32,13 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
 
   const [ currentAvatarPreview, setCurrentAvatarPreview ] = useState<string>('misa');
   const [ avatarPreview, setAvatarPreview ] = useState<string>('misa');
-  const [userName, setUserName] = useState<string>(Video.instance()?.userName || '');
+  const { user } = useAuth0();
+  const [userName] = useState<string>(user.given_name  || user.nickname);
   const { connect } = useVideoContext();
-  const { user, isAuthenticated } = useAuth0();
-  if (isAuthenticated) {
-    setUserName(user.given_name  || user.nickname);
-  }
+  
+  // if (isAuthenticated) {
+  //   setUserName();
+  // }
   // TODO: getSavedTownsFromDataBase()
   const currentlySavedTowns: CoveyTownInfo[] = [];
   const toast = useToast();
@@ -77,15 +79,15 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setAvatarPreview(event.target.value);
-  }
+  };
 
   const handleSave = () => {
     setCurrentAvatarPreview(avatarPreview);  
     // TODO: Add Database function
-  }
+  };
 
   return (
-    <>
+    <IntroContainer>
       <Stack>
         <Center h="50px">
           <Heading as="h1" size="lg">Profile Page</Heading>
@@ -135,11 +137,12 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
         <Heading p="4" as="h4" size="md">Saved Towns</Heading>
             <Box maxH="500px" overflowY="scroll">
               <Table>
-                <Thead><Tr><Th>Room Name</Th><Th>Room ID</Th><Th>Activity</Th></Tr></Thead>
+                <Thead><Tr><Th>Room Name</Th><Th>Room ID</Th><Th>Room Type</Th><Th>Activity</Th></Tr></Thead>
                 <Tbody>
                   {currentlySavedTowns?.map((town) => (
                     <Tr key={town.coveyTownID}><Td role='cell'>{town.friendlyName}</Td><Td
                       role='cell'>{town.coveyTownID}</Td>
+                      <Td role='cell'>Public/Private</Td>
                       <Td role='cell'>{town.currentOccupancy}/{town.maximumOccupancy}
                         <Button onClick={() => handleJoin(town.coveyTownID)}
                                 disabled={town.currentOccupancy >= town.maximumOccupancy}>Connect</Button></Td></Tr>
@@ -148,7 +151,7 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
               </Table>
             </Box>
       </Stack>
-    </>
+    </IntroContainer>
   );
 } 
 
