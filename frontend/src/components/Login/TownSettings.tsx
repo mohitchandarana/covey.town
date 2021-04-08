@@ -108,6 +108,9 @@ const TownSettings: React.FunctionComponent = () => {
           </ModalBody>
 
           <ModalFooter>
+            <Button data-testid='savebutton' colorScheme="green" mr={3} value="save" name='action3' onClick={()=>processUpdates('save')}>
+              Save to Profile
+            </Button>
             <Button data-testid='deletebutton' colorScheme="red" mr={3} value="delete" name='action1' onClick={()=>processUpdates('delete')}>
               Delete
             </Button>

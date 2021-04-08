@@ -4,9 +4,14 @@ import {
   Box,
   Button,
   Center,
+  Flex,
+  FormControl,
+  FormLabel,
   Heading,  
   Image,
+  Input,
   Select,
+  Spacer,
   Stack,
   Table,
   Tbody,
@@ -35,7 +40,11 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
   const { user } = useAuth0();
   const [userName] = useState<string>(user.given_name  || user.nickname);
   const { connect } = useVideoContext();
-  
+
+  const [ firstName, setFirstName ] = useState<string>('placeholder for firstName');
+  const [ lastName, setLastName ] = useState<string>('placeholder for lastName');
+  const [ email ] = useState<string>('placeholder for email');
+
   // if (isAuthenticated) {
   //   setUserName();
   // }
@@ -86,12 +95,43 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
     // TODO: Add Database function
   };
 
+  const processUpdates = async (action: string) =>{
+    if (action === 'edit'){
+      // TODO: Add Database function
+    }
+  }
   return (
     <IntroContainer>
       <Stack>
         <Center h="50px">
           <Heading as="h1" size="lg">Profile Page</Heading>
-        </Center>    
+        </Center>   
+        <Box p="4" borderWidth="1px" borderRadius="lg">
+          <Center>
+            <Heading as="h2" size="md">User Infomation</Heading>
+          </Center>
+          <Box p="4" borderWidth="1px" borderRadius="lg">
+            <form onSubmit={(ev)=>{ev.preventDefault(); processUpdates('edit')}}>
+              <Stack>
+                <Input id='email' name="email" value={email} disabled />
+                <Stack align='center' direction='row'>
+                  <FormControl>
+                    <FormLabel htmlFor='firstName'>First Name</FormLabel>
+                    <Input id='firstName' placeholder="First Name" name="firstName" value={firstName} onChange={(ev)=>setFirstName(ev.target.value)} />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel htmlFor='lastName'>Last Name</FormLabel>
+                    <Input id='lastName' placeholder="Last Name" name="lastName" value={lastName} onChange={(ev)=>setLastName(ev.target.value)} />
+                  </FormControl>
+                  <Button data-testid='updatebutton' colorScheme="blue" value="update" name='action2' onClick={()=>processUpdates('edit')}>
+                  Update
+                  </Button>
+                </Stack>
+              </Stack>  
+            </form>
+          </Box>
+          
+        </Box> 
         <Box p="4" borderWidth="1px" borderRadius="lg">
           <Center>
             <Heading as="h2" size="md">Current User Avatar</Heading>
@@ -106,10 +146,9 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
           </Center>
         </Box>
         <Box p="4" borderWidth="1px" borderRadius="lg">
-          <Stack direction="row">
+          <Stack align='center' direction="row">
             <BsFillInfoCircleFill/> <Text fontSize="lg">To change the current Avatar, select one from the Dropdown Menu </Text>
           </Stack>
-        
           <Center>
             <Heading as="h2" size="sm">Selection Preview</Heading>
           </Center>   
@@ -137,7 +176,7 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
         <Heading p="4" as="h4" size="md">Saved Towns</Heading>
             <Box maxH="500px" overflowY="scroll">
               <Table>
-                <Thead><Tr><Th>Room Name</Th><Th>Room ID</Th><Th>Room Type</Th><Th>Activity</Th></Tr></Thead>
+                <Thead><Tr><Th>Town Name</Th><Th>Town ID</Th><Th>Town Type</Th><Th>Activity</Th></Tr></Thead>
                 <Tbody>
                   {currentlySavedTowns?.map((town) => (
                     <Tr key={town.coveyTownID}><Td role='cell'>{town.friendlyName}</Td><Td
@@ -150,6 +189,9 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
                 </Tbody>
               </Table>
             </Box>
+            <Button data-testid='deletebutton' colorScheme="red" mr={3} value="delete" name='action1' >
+              Delete Account
+            </Button>
       </Stack>
     </IntroContainer>
   );
