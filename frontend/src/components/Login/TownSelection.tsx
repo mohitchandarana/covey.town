@@ -22,7 +22,7 @@ import {
 import { useAuth0 } from "@auth0/auth0-react";
 import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
 import Video from '../../classes/Video/Video';
-import { CoveyTownInfo, TownJoinResponse, } from '../../classes/TownsServiceClient';
+import { CoveyTownInfo, TownJoinResponse} from '../../classes/TownsServiceClient';
 import useCoveyAppState from '../../hooks/useCoveyAppState';
 
 interface TownSelectionProps {
@@ -36,6 +36,22 @@ function getDefaultUsername(isAuthenticated:boolean, user:any){
   return user.given_name  || user.nickname;
 }
 
+function getEmail(isAuthenticated: boolean, user: any): string {
+  if (isAuthenticated) {
+    return user.email;
+  }
+  return 'Guest';
+}
+
+function linkUser(apiClient: any) {
+  
+    apiClient.updateUser({
+      'email': 'Guest',
+      'username': 'Guest',
+    });
+  
+}
+
 export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Element {
   const { user, isAuthenticated } = useAuth0();
   const [userName, setUserName] = useState<string>(Video.instance()?.userName || getDefaultUsername(isAuthenticated, user));
@@ -46,6 +62,14 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
   const { connect } = useVideoContext();
   const { apiClient } = useCoveyAppState();
   const toast = useToast();
+  const [userExists, setUserExists] = useState<boolean>(false);
+
+  const updateUser = () => {
+    if (!userExists) {
+      apiClient.logUser({ email: user.email });
+    }
+    setUserExists(true);
+  }
 
   const updateTownListings = useCallback(() => {
     // console.log(apiClient);
@@ -116,9 +140,11 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
       return;
     }
     try {
+
       const newTownInfo = await apiClient.createTown({
         friendlyName: newTownName,
-        isPubliclyListed: newTownIsPublic
+        isPubliclyListed: newTownIsPublic,
+        creator: getEmail(isAuthenticated, user),
       });
       let privateMessage = <></>;
       if (!newTownIsPublic) {
