@@ -65,12 +65,13 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
   const [userExists, setUserExists] = useState<boolean>(false);
 
   const updateUser = () => {
-    if (!userExists) {
+    // ISSUE-> user.email is undefined
+    // i tried with other user values and nothing seems to be defined
+    if (!userExists && isAuthenticated && user) {
       apiClient.logUser({ email: user.email });
     }
     setUserExists(true);
   }
-
   const updateTownListings = useCallback(() => {
     // console.log(apiClient);
     apiClient.listTowns()
@@ -81,6 +82,7 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
       })
   }, [setCurrentPublicTowns, apiClient]);
   useEffect(() => {
+    updateUser();
     updateTownListings();
     const timer = setInterval(updateTownListings, 2000);
     return () => {
@@ -170,7 +172,6 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
       })
     }
   };
-
   return (
     <>
       <form>

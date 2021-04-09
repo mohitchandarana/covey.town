@@ -9,6 +9,7 @@ import {
   townListHandler,
   townSubscriptionHandler,
   townUpdateHandler,
+  createUserHandler,
 } from '../requestHandlers/CoveyTownRequestHandlers';
 import { logError } from '../Utils';
 import { updateUser } from '../database/databaseService';
@@ -36,8 +37,9 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
 
   app.post('/users', BodyParser.json(), async (req, res) => {
     try {
+      console.log('towns', req.body.email);
       const result = await createUserHandler({
-        email: req.params.email,
+        email: req.body.email,
       });
       res.status(200)
         .json(result);
