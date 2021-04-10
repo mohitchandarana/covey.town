@@ -37,7 +37,6 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
 
   app.post('/users', BodyParser.json(), async (req, res) => {
     try {
-      console.log('towns', req.body.email);
       const result = await createUserHandler({
         email: req.body.email,
       });

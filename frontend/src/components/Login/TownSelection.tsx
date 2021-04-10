@@ -117,7 +117,7 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
       }
     } catch (err) {
       toast({
-        title: 'Unable to connect to Towns Service',
+        title: coveyRoomID,
         description: err.toString(),
         status: 'error'
       })
