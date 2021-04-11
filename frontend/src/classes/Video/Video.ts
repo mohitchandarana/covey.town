@@ -61,6 +61,7 @@ export default class Video {
           userName: this._userName,
         })
           .then((result) => {
+            console.log('setup success');
             this.sessionToken = result.coveySessionToken;
             this.videoToken = result.providerVideoToken;
             this._townFriendlyName = result.friendlyName;
@@ -68,6 +69,7 @@ export default class Video {
             resolve(result);
           })
           .catch((err) => {
+            console.log('setup failed');
             reject(err);
           });
       });
@@ -100,10 +102,12 @@ export default class Video {
 
   public static async setup(username: string, coveyTownID: string): Promise<TownJoinResponse> {
     let result = null;
+    
 
     if (!Video.video) {
       Video.video = new Video(username, coveyTownID);
     }
+
 
     try {
       result = await Video.video.setup();

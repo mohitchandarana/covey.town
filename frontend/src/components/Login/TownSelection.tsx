@@ -43,14 +43,6 @@ function getEmail(isAuthenticated: boolean, user: any): string {
   return 'Guest';
 }
 
-function linkUser(apiClient: any) {
-  
-    apiClient.updateUser({
-      'email': 'Guest',
-      'username': 'Guest',
-    });
-  
-}
 
 export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Element {
   const { user, isAuthenticated } = useAuth0();
@@ -91,6 +83,7 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
   }, [updateTownListings]);
 
   const handleJoin = useCallback(async (coveyRoomID: string) => {
+    console.log('in join\n\n');
     try {
       if (!userName || userName.length === 0) {
         toast({
@@ -109,15 +102,16 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
         return;
       }
       const initData = await Video.setup(userName, coveyRoomID);
-
+  
       const loggedIn = await doLogin(initData);
+
       if (loggedIn) {
         assert(initData.providerVideoToken);
         await connect(initData.providerVideoToken);
       }
     } catch (err) {
       toast({
-        title: coveyRoomID,
+        title: 'Unable to connect to Towns Service JOIN',
         description: err.toString(),
         status: 'error'
       })

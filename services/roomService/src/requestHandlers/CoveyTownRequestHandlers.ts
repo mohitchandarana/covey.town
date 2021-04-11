@@ -113,6 +113,7 @@ export async function townJoinHandler(requestData: TownJoinRequest): Promise<Res
     };
   }
   const town: TownData = await getTownByID(requestData.coveyTownID);
+  console.log(town)
   const newPlayer = new Player(requestData.userName);
   const newSession = await coveyTownController.addPlayer(newPlayer);
   assert(newSession.videoToken);
