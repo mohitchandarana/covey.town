@@ -53,11 +53,33 @@ export interface TownCreateResponse {
   coveyTownPassword: string;
 }
 
+export interface UserCreateRequest {
+  email: string;
+}
+
+export interface UserDeleteRequest {
+  email: string;
+}
+
 /**
  * Response from the server for a Town list request
  */
 export interface TownListResponse {
   towns: CoveyTownInfo[];
+}
+
+export interface SavedTownsRequest {
+  email: string;
+}
+
+export interface SaveTownRequest {
+  email: string;
+  townID: string;
+}
+
+export interface DeleteTownRequest {
+  email: string;
+  townID: string;
 }
 
 /**
@@ -80,8 +102,13 @@ export interface TownUpdateRequest {
   isPubliclyListed?: boolean;
 }
 
-export interface UserCreateRequest {
+export interface CurrentAvatarRequest {
   email: string;
+}
+
+export interface UpdateAvatarRequest {
+  email: string;
+  avatar: string;
 }
 
 /**
@@ -125,11 +152,16 @@ export default class TownsServiceClient {
     throw new Error(`Error processing request: ${response.data.message}`);
   }
 
-  async updateUser(requestData: UserCreateRequest): Promise<void> {
+  async logUser(requestData: UserCreateRequest): Promise<void> {
     const responseWrapper = await this._axios.post<ResponseEnvelope<void>>('/users', requestData);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper, true);
   }
-  
+
+  async deleteUser(requestData: UserDeleteRequest): Promise<void> {
+    const responseWrapper = await this._axios.delete<ResponseEnvelope<void>>(`/users/${requestData.email}`);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper, true);
+  }
+
   async createTown(requestData: TownCreateRequest): Promise<TownCreateResponse> {
     const responseWrapper = await this._axios.post<ResponseEnvelope<TownCreateResponse>>('/towns', requestData);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
@@ -150,9 +182,36 @@ export default class TownsServiceClient {
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
+  async listSavedTowns(requestData: SavedTownsRequest): Promise<TownListResponse> {
+    const responseWrapper = await this._axios.get<ResponseEnvelope<TownListResponse>>(`/towns/${requestData.email}`);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+  }
+
+  async saveTown(requestData: SaveTownRequest): Promise<void> {
+    const responseWrapper = await this._axios.post<ResponseEnvelope<void>>(`/towns/${requestData.email}`, requestData);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+  }
+
+  async deleteSavedTown(requestData: DeleteTownRequest): Promise<void> {
+    const responseWrapper = await this._axios.delete<ResponseEnvelope<void>>(`/towns/${requestData.email}/${requestData.townID}`);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+  }
+
   async joinTown(requestData: TownJoinRequest): Promise<TownJoinResponse> {
     const responseWrapper = await this._axios.post('/sessions', requestData);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }
+
+  async getCurrentAvatar(requestData: CurrentAvatarRequest): Promise<string> {
+    const responseWrapper = await this._axios.get(`/avatars/${requestData.email}`);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+  }
+
+  async updateUserAvatar(requestData: UpdateAvatarRequest): Promise<void> {
+    const responseWrapper = await this._axios.patch(`/avatars/${requestData.email}`, requestData);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+  }
+
+
 
 }
