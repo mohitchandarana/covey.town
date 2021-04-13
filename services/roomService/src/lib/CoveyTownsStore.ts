@@ -21,7 +21,7 @@ export type SavedCoveyTownList = {
   publicStatus: string,
   currentOccupancy: number,
   maximumOccupancy: number,
-}[]
+}[];
 
 export type CreateTownResponse = {
   coveyTownController: CoveyTownController,
@@ -110,7 +110,7 @@ export class CoveyTownsStore {
         const occupancy = controller?.occupancy;
         let publicStatus = 'private';
         if (town.publicStatus) {
-          publicStatus = 'public'
+          publicStatus = 'public';
         }
         response.push({
           friendlyName: town.friendlyName,

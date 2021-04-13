@@ -221,15 +221,15 @@ export async function getUserInfoHandler(requestData: UserInfoRequest): Promise<
   const response = await getAllUserInfo(requestData.email);
   return {
     isOK: true,
-    response: response,
-  }
+    response,
+  };
 }
 
 export async function updateUserInfoHandler(requestData: UpdateUserRequest): Promise<ResponseEnvelope<void>> {
   await setUserNames(requestData.email, requestData.firstName, requestData.lastName);
   return {
     isOK: true,
-  }
+  };
 }
 
 export async function townListHandler(): Promise<ResponseEnvelope<TownListResponse>> {
