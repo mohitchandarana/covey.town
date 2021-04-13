@@ -5,7 +5,7 @@ import { Server } from 'http';
 import { StatusCodes } from 'http-status-codes';
 import {
   townCreateHandler,
-  savedTownHandler,
+  savedTownListHandler,
   townDeleteHandler,
   townJoinHandler,
   townListHandler,
@@ -120,7 +120,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
    */
   app.get('/towns/:user', BodyParser.json(), async (req, res) => {
     try {
-      const result = await savedTownHandler({ email: req.params.user });
+      const result = await savedTownListHandler({ email: req.params.user });
       res.status(StatusCodes.OK)
         .json(result);
     } catch (err) {

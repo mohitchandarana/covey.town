@@ -24,7 +24,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { BsFillInfoCircleFill } from 'react-icons/bs';
 import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
 import Video from '../../classes/Video/Video';
-import { CoveyTownInfo, TownJoinResponse, } from '../../classes/TownsServiceClient';
+import { CoveyTownInfo, CoveySavedTownInfo, TownJoinResponse, } from '../../classes/TownsServiceClient';
 import useCoveyAppState from '../../hooks/useCoveyAppState';
 
 interface TownSelectionProps {
@@ -52,7 +52,7 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
   const [newTownIsPublic, setNewTownIsPublic] = useState<boolean>(true);
   const [townIDToJoin, setTownIDToJoin] = useState<string>('');
   const [currentPublicTowns, setCurrentPublicTowns] = useState<CoveyTownInfo[]>();
-  const [savedTowns, setSavedTowns] = useState<CoveyTownInfo[]>();
+  const [savedTowns, setSavedTowns] = useState<CoveySavedTownInfo[]>();
   const { connect } = useVideoContext();
   const { apiClient } = useCoveyAppState();
   const toast = useToast();
@@ -188,11 +188,11 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
         <Box maxH="500px" overflowY="scroll">
           <Table>
             <TableCaption placement="bottom">All Saved Towns</TableCaption>
-            <Thead><Tr><Th>Town Name</Th><Th>Town ID</Th><Th>Activity</Th><Th>Town Type</Th></Tr></Thead>
+            <Thead><Tr><Th>Town Name</Th><Th>Town ID</Th><Th>Town Type</Th><Th>Activity</Th></Tr></Thead>
             <Tbody>
               {savedTowns?.map((town) => (
                 <Tr key={town.coveyTownID}><Td role='cell'>{town.friendlyName}</Td><Td
-                  role='cell'>{town.coveyTownID}</Td>
+                  role='cell'>{town.coveyTownID}</Td><Td role='cell'>{town.publicStatus}</Td>
                   <Td role='cell'>{town.currentOccupancy}/{town.maximumOccupancy}
                     <Button onClick={() => handleJoin(town.coveyTownID)}
                             disabled={town.currentOccupancy >= town.maximumOccupancy}>Connect</Button></Td></Tr>

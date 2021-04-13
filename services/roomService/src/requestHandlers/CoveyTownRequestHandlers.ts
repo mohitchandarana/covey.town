@@ -69,6 +69,10 @@ export interface TownListResponse {
   towns: CoveyTownList;
 }
 
+export interface SavedTownListResponse {
+  towns: SavedCoveyTownList;
+}
+
 /**
  * Payload sent by the client to delete a Town
  */
@@ -207,7 +211,7 @@ export async function townListHandler(): Promise<ResponseEnvelope<TownListRespon
   };
 }
 
-export async function savedTownHandler(requestData: SavedTownsRequest): Promise<ResponseEnvelope<TownListResponse>> {
+export async function savedTownListHandler(requestData: SavedTownsRequest): Promise<ResponseEnvelope<SavedTownListResponse>> {
   const townsStore = await CoveyTownsStore.getInstance();
   const townList: SavedCoveyTownList = await townsStore.getSavedTowns(requestData.email);
   return {

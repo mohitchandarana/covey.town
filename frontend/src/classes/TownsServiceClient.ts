@@ -65,6 +65,10 @@ export interface TownListResponse {
   towns: CoveyTownInfo[];
 }
 
+export interface SavedTownListResponse {
+  towns: CoveySavedTownInfo[];
+}
+
 export interface SavedTownsRequest {
   email: string;
 }
@@ -124,6 +128,14 @@ export type CoveyTownInfo = {
   maximumOccupancy: number
 };
 
+export type CoveySavedTownInfo = {
+  friendlyName: string;
+  coveyTownID: string;
+  publicStatus: string;
+  currentOccupancy: number;
+  maximumOccupancy: number
+};
+
 export default class TownsServiceClient {
   private _axios: AxiosInstance;
 
@@ -179,8 +191,8 @@ export default class TownsServiceClient {
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
-  async listSavedTowns(requestData: SavedTownsRequest): Promise<TownListResponse> {
-    const responseWrapper = await this._axios.get<ResponseEnvelope<TownListResponse>>(`/towns/${requestData.email}`);
+  async listSavedTowns(requestData: SavedTownsRequest): Promise<SavedTownListResponse> {
+    const responseWrapper = await this._axios.get<ResponseEnvelope<SavedTownListResponse>>(`/towns/${requestData.email}`);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
