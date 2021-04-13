@@ -3,7 +3,7 @@ import { Socket } from 'socket.io';
 import Player from '../types/Player';
 import { CoveyTownList, UserLocation } from '../CoveyTypes';
 import CoveyTownListener from '../types/CoveyTownListener';
-import { CoveyTownsStore, updateTown } from '../lib/CoveyTownsStore';
+import { CoveyTownsStore, updateTown, SavedCoveyTownList } from '../lib/CoveyTownsStore';
 import {
   deleteUser,
   updateUser,
@@ -209,7 +209,7 @@ export async function townListHandler(): Promise<ResponseEnvelope<TownListRespon
 
 export async function savedTownHandler(requestData: SavedTownsRequest): Promise<ResponseEnvelope<TownListResponse>> {
   const townsStore = await CoveyTownsStore.getInstance();
-  const townList: CoveyTownList = await townsStore.getSavedTowns(requestData.email);
+  const townList: SavedCoveyTownList = await townsStore.getSavedTowns(requestData.email);
   return {
     isOK: true,
     response: { towns: townList },
