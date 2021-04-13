@@ -4,14 +4,12 @@ import {
   Box,
   Button,
   Center,
-  Flex,
   FormControl,
   FormLabel,
   Heading,  
   Image,
   Input,
   Select,
-  Spacer,
   Stack,
   Table,
   Tbody,
@@ -24,10 +22,26 @@ import {
 } from '@chakra-ui/react';
 import { BsFillInfoCircleFill } from 'react-icons/bs'
 import { useAuth0 } from "@auth0/auth0-react";
+import { makeStyles, Theme } from '@material-ui/core';
 import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
 import Video from '../../classes/Video/Video';
 import { CoveyTownInfo, TownJoinResponse, } from '../../classes/TownsServiceClient';
 import IntroContainer from '../VideoCall/VideoFrontend/components/IntroContainer/IntroContainer';
+import BackHomeButton from './BackHomeButton';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  buttonContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    width: '100%',
+    marginBottom: '30px',
+  },
+
+  bodyDiv: {
+    backgroundColor: '#87ceff',
+    height: '100vh',
+  }
+}));
 
 interface ProfileProps {
   doLogin: (initData: TownJoinResponse) => Promise<boolean>
@@ -36,6 +50,11 @@ interface ProfileProps {
 export default function Profile({ doLogin }: ProfileProps): JSX.Element {
 
   const [ currentAvatarPreview, setCurrentAvatarPreview ] = useState<string>('misa');
+  const { buttonContainer, bodyDiv } = useStyles();
+
+  // const { myPlayerID, players } = useCoveyAppState();
+  // const myPlayer = players.find((player) => player.id === myPlayerID);
+  // const [ currentAvatar, setCurrentAvatar ] = useState<string>(myPlayer?.currentAvatar || 'misa');
   const [ avatarPreview, setAvatarPreview ] = useState<string>('misa');
   const { user } = useAuth0();
   const [userName] = useState<string>(user.given_name  || user.nickname);
@@ -90,6 +109,7 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
     setAvatarPreview(event.target.value);
   };
 
+
   const handleSave = () => {
     setCurrentAvatarPreview(avatarPreview);  
     // TODO: Add Database function
@@ -100,8 +120,13 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
       // TODO: Add Database function
     }
   }
+  
   return (
+    <div className={bodyDiv}>
     <IntroContainer>
+            <div className={buttonContainer}>
+        <BackHomeButton />
+      </div>
       <Stack>
         <Center h="50px">
           <Heading as="h1" size="lg">Profile Page</Heading>
@@ -194,6 +219,7 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
             </Button>
       </Stack>
     </IntroContainer>
+    </div>
   );
 } 
 
