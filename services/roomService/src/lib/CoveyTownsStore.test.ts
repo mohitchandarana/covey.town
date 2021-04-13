@@ -3,6 +3,7 @@ import { CoveyTownsStore, CreateTownResponse, updateTown } from './CoveyTownsSto
 import CoveyTownListener from '../types/CoveyTownListener';
 import Player from '../types/Player';
 import db from '../database/knexfile';
+import { logUser, deleteUser } from '../database/databaseService';
 
 const mockCoveyListenerTownDestroyed = jest.fn();
 const mockCoveyListenerOtherFns = jest.fn();
@@ -28,10 +29,13 @@ async function createTownForTesting(friendlyNameToUse?: string, isPublic = false
   const friendlyName = friendlyNameToUse !== undefined ? friendlyNameToUse :
     `${isPublic ? 'Public' : 'Private'}TestingTown=${nanoid()}`;
   return CoveyTownsStore.getInstance().then((instance: CoveyTownsStore) =>
-    instance.createTown(friendlyName, isPublic, 'Guest'));
+    instance.createTown(friendlyName, isPublic, 'TEST_USER'));
 }
 
 describe('CoveyTownsStore', () => {
+  beforeAll(async () => {
+    await logUser('TEST_USER');
+  })
   beforeEach(() => {
     mockCoveyListenerTownDestroyed.mockClear();
     mockCoveyListenerOtherFns.mockClear();
@@ -44,6 +48,7 @@ describe('CoveyTownsStore', () => {
   });
 
   afterAll(async () => {
+    await deleteUser('TEST_USER');
     await db.destroy();
   });
 

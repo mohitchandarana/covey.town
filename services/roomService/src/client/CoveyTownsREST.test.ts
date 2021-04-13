@@ -5,6 +5,7 @@ import { nanoid } from 'nanoid';
 import assert from 'assert';
 import { AddressInfo } from 'net';
 import db from '../database/knexfile';
+import { logUser, deleteUser } from '../database/databaseService';
 
 import TownsServiceClient, { TownListResponse } from './TownsServiceClient';
 import addTownRoutes from '../router/towns';
@@ -38,7 +39,7 @@ describe('TownsServiceAPIREST', () => {
     const ret = await apiClient.createTown({
       friendlyName,
       isPubliclyListed: isPublic,
-      creator: 'Guest',
+      creator: 'TEST_USER',
     });
     return {
       friendlyName,
@@ -58,9 +59,12 @@ describe('TownsServiceAPIREST', () => {
     const address = server.address() as AddressInfo;
 
     apiClient = new TownsServiceClient(`http://127.0.0.1:${address.port}`);
+
+    await logUser('TEST_USER');
   });
   afterAll(async () => {
     await server.close();
+    await deleteUser('TEST_USER');
     await db.destroy();
   });
   describe('CoveyTownCreateAPI', () => {
