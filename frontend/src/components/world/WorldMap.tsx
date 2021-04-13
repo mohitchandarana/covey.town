@@ -10,9 +10,10 @@ class CoveyGameScene extends Phaser.Scene {
     sprite: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody, label: Phaser.GameObjects.Text
   };
 
-  private currentAvatar: string;
+  // private currentAvatar: string;
   
   private id?: string;
+  private myPlayerID: string;
 
   private players: Player[] = [];
 
@@ -35,11 +36,12 @@ class CoveyGameScene extends Phaser.Scene {
 
   private emitMovement: (loc: UserLocation) => void;
 
-  constructor(video: Video, emitMovement: (loc: UserLocation) => void, currentAvatar: string) {
+  constructor(video: Video, emitMovement: (loc: UserLocation) => void, myPlayerID : string) {
+    // Add current avatar in constructor parameters and assign to private variable
     super('PlayGame');
     this.video = video;
     this.emitMovement = emitMovement;
-    this.currentAvatar = currentAvatar;
+    this.myPlayerID = myPlayerID;
   }
 
   preload() {
@@ -92,7 +94,7 @@ class CoveyGameScene extends Phaser.Scene {
       myPlayer = new Player(player.id, player.userName, location);
       this.players.push(myPlayer);
     }
-    if (this.id !== myPlayer.id && this.physics && player.location) {
+    if (this.myPlayerID !== myPlayer.id && this.physics && player.location) {
       let { sprite } = myPlayer;
       const avatar = myPlayer.currentAvatar;
       if (!sprite) {
@@ -437,7 +439,7 @@ class CoveyGameScene extends Phaser.Scene {
 export default function WorldMap(): JSX.Element {
   const video = Video.instance();
   const {
-    emitMovement, players, myPlayerID
+    emitMovement, players, myPlayerID,
   } = useCoveyAppState();
   const [gameScene, setGameScene] = useState<CoveyGameScene>();
   useEffect(() => {
@@ -454,12 +456,12 @@ export default function WorldMap(): JSX.Element {
       },
     };
 
-  const myPlayer = players.find((player) => player.id === myPlayerID);
-  const currentAvatar = myPlayer?.currentAvatar || 'misa';
+  // const myPlayer = players.find((player) => player.id === myPlayerID);
+  // const currentAvatar = myPlayer?.currentAvatar || 'misa';
 
     const game = new Phaser.Game(config);
     if (video) {
-      const newGameScene = new CoveyGameScene(video, emitMovement, currentAvatar);
+      const newGameScene = new CoveyGameScene(video, emitMovement, myPlayerID);
       setGameScene(newGameScene);
       game.scene.add('coveyBoard', newGameScene, true);
       video.pauseGame = () => {
@@ -472,7 +474,7 @@ export default function WorldMap(): JSX.Element {
     return () => {
       game.destroy(true);
     };
-  }, [video, emitMovement]);
+  }, [video, emitMovement, myPlayerID]);
 
   const deepPlayers = JSON.stringify(players);
   useEffect(() => {
