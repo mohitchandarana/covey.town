@@ -20,7 +20,7 @@ import {
   Tr,
   useToast
 } from '@chakra-ui/react';
-import { BsFillInfoCircleFill } from 'react-icons/bs'
+import { BsFillInfoCircleFill } from 'react-icons/bs';
 import { useAuth0 } from "@auth0/auth0-react";
 import { makeStyles, Theme } from '@material-ui/core';
 import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';

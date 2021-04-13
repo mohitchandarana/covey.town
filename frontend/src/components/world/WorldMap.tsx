@@ -13,6 +13,7 @@ class CoveyGameScene extends Phaser.Scene {
   // private currentAvatar: string;
   
   private id?: string;
+  
   private myPlayerID: string;
 
   private players: Player[] = [];

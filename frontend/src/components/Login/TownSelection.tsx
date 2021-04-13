@@ -14,12 +14,14 @@ import {
   TableCaption,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
   useToast
 } from '@chakra-ui/react';
 import { useAuth0 } from "@auth0/auth0-react";
+import { BsFillInfoCircleFill } from 'react-icons/bs';
 import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
 import Video from '../../classes/Video/Video';
 import { CoveyTownInfo, TownJoinResponse, } from '../../classes/TownsServiceClient';
@@ -50,6 +52,7 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
   const [newTownIsPublic, setNewTownIsPublic] = useState<boolean>(true);
   const [townIDToJoin, setTownIDToJoin] = useState<string>('');
   const [currentPublicTowns, setCurrentPublicTowns] = useState<CoveyTownInfo[]>();
+  const [savedTowns, setSavedTowns] = useState<CoveyTownInfo[]>();
   const { connect } = useVideoContext();
   const { apiClient } = useCoveyAppState();
   const toast = useToast();
@@ -164,6 +167,43 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
     }
   };
 
+  let savedTownsComponent = <div>
+    <Box p="4" borderWidth="1px" borderRadius="lg">
+      <Stack align='center' direction="row">
+        <BsFillInfoCircleFill/> <Text fontSize="lg">To Use the Saved Towns Feature, Sign up or Log in! </Text>
+      </Stack>
+    </Box></div>;
+
+  if(isAuthenticated){
+
+    apiClient.listSavedTowns({email: getEmail(isAuthenticated, user)})
+      .then((towns) => {
+        setSavedTowns(towns.towns
+          .sort((a, b) => b.currentOccupancy - a.currentOccupancy)
+        );
+      })
+
+    savedTownsComponent = (<div>
+      <Heading p="4" as="h4" size="md">Saved Towns</Heading>
+        <Box maxH="500px" overflowY="scroll">
+          <Table>
+            <TableCaption placement="bottom">All Saved Towns</TableCaption>
+            <Thead><Tr><Th>Town Name</Th><Th>Town ID</Th><Th>Activity</Th><Th>Town Type</Th></Tr></Thead>
+            <Tbody>
+              {savedTowns?.map((town) => (
+                <Tr key={town.coveyTownID}><Td role='cell'>{town.friendlyName}</Td><Td
+                  role='cell'>{town.coveyTownID}</Td>
+                  <Td role='cell'>{town.currentOccupancy}/{town.maximumOccupancy}
+                    <Button onClick={() => handleJoin(town.coveyTownID)}
+                            disabled={town.currentOccupancy >= town.maximumOccupancy}>Connect</Button></Td></Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </Box>
+      </div>
+      )
+  }
+
   return (
     <>
       <form>
@@ -220,12 +260,14 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
               </Flex>
 
             </Box>
+            
+            <div>{savedTownsComponent}</div>
 
             <Heading p="4" as="h4" size="md">Select a public town to join</Heading>
             <Box maxH="500px" overflowY="scroll">
               <Table>
                 <TableCaption placement="bottom">Publicly Listed Towns</TableCaption>
-                <Thead><Tr><Th>Room Name</Th><Th>Room ID</Th><Th>Activity</Th></Tr></Thead>
+                <Thead><Tr><Th>Town Name</Th><Th>Town ID</Th><Th>Activity</Th></Tr></Thead>
                 <Tbody>
                   {currentPublicTowns?.map((town) => (
                     <Tr key={town.coveyTownID}><Td role='cell'>{town.friendlyName}</Td><Td
