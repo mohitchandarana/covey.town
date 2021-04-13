@@ -36,13 +36,13 @@ export type SavedTownListingInfo = {
 
 export type UserInfo = {
   email: string,
-  username: string,
-  nickname: string,
+  firstName: string,
+  lastName: string,
   currentAvatar: string,
 };
 
 // functions interacting with Users
-export async function updateUser(email: string): Promise<void>  {
+export async function logUser(email: string): Promise<void>  {
   let count = 0;
   await db('Users')
     .where('email', email)
@@ -63,7 +63,16 @@ export async function getAllUserInfo(email: string): Promise<UserInfo> {
     .where('email', email)
     .then((rows: any[]) => {
       const user = rows[0];
-      return { email: user.email, username: user.username, nickname: user.nickname, currentAvatar: user.currentAvatar };
+      return { email: user.email, firstName: user.firstName, lastName: user.lastName, currentAvatar: user.currentAvatar };
+    });
+}
+
+export async function setUserNames(email: string, firstName?: string, lastName?: string): Promise<void> {
+  await db('Users')
+    .where('email', email)
+    .update({
+      'firstName': firstName,
+      'lastName': lastName,
     });
 }
 

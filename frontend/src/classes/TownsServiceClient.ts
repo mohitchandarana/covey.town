@@ -58,6 +58,23 @@ export interface UserDeleteRequest {
   email: string;
 }
 
+export interface UpdateUserRequest {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+export interface UserInfoRequest {
+  email: string;
+}
+
+export interface UserInfoResponse {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  currentAvatar: string;
+}
+
 /**
  * Response from the server for a Town list request
  */
@@ -156,6 +173,16 @@ export default class TownsServiceClient {
 
   async deleteUser(requestData: UserDeleteRequest): Promise<void> {
     const responseWrapper = await this._axios.delete<ResponseEnvelope<void>>(`/users/${requestData.email}`);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper, true);
+  }
+
+  async updateUser(requestData: UpdateUserRequest): Promise<void> {
+    const responseWrapper = await this._axios.patch<ResponseEnvelope<void>>(`/users/${requestData.email}`);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper, true);
+  }
+
+  async getUserInfo(requestData: UserInfoRequest): Promise<UserInfoResponse> {
+    const responseWrapper = await this._axios.get<ResponseEnvelope<UserInfoResponse>>(`/users/${requestData.email}`);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper, true);
   }
 

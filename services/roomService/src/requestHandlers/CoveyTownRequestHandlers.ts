@@ -5,8 +5,10 @@ import { CoveyTownList, UserLocation } from '../CoveyTypes';
 import CoveyTownListener from '../types/CoveyTownListener';
 import { CoveyTownsStore, updateTown, SavedCoveyTownList } from '../lib/CoveyTownsStore';
 import {
+  getAllUserInfo,
+  setUserNames,
   deleteUser,
-  updateUser,
+  logUser,
   getTownByID,
   saveTown,
   unsaveTown,
@@ -83,6 +85,23 @@ export interface CreateUserRequest {
 
 export interface DeleteUserRequest {
   email: string;
+}
+
+export interface UserInfoRequest {
+  email: string;
+}
+
+export interface UserInfoResponse {
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  currentAvatar: string;
+}
+
+export interface UpdateUserRequest {
+  email: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 export interface SavedTownsRequest {
@@ -185,7 +204,7 @@ export async function updateAvatarHandler(requestData: UpdateAvatarRequest): Pro
 }
 
 export async function createUserHandler(requestData: CreateUserRequest): Promise<ResponseEnvelope<void>> {
-  await updateUser(requestData.email);
+  await logUser(requestData.email);
   return {
     isOK: true,
   };
@@ -196,6 +215,21 @@ export async function userDeleteHandler(requestData: DeleteUserRequest): Promise
   return {
     isOK: true,
   };
+}
+
+export async function getUserInfoHandler(requestData: UserInfoRequest): Promise<ResponseEnvelope<UserInfoResponse>> {
+  const response = await getAllUserInfo(requestData.email);
+  return {
+    isOK: true,
+    response: response,
+  }
+}
+
+export async function updateUserInfoHandler(requestData: UpdateUserRequest): Promise<ResponseEnvelope<void>> {
+  await setUserNames(requestData.email, requestData.firstName, requestData.lastName);
+  return {
+    isOK: true,
+  }
 }
 
 export async function townListHandler(): Promise<ResponseEnvelope<TownListResponse>> {

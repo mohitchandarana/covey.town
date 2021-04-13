@@ -1,10 +1,12 @@
-import { Express } from 'express';
+ import { Express } from 'express';
 import BodyParser from 'body-parser';
 import io from 'socket.io';
 import { Server } from 'http';
 import { StatusCodes } from 'http-status-codes';
 import {
   townCreateHandler,
+  getUserInfoHandler,
+  updateUserInfoHandler,
   savedTownHandler,
   townDeleteHandler,
   townJoinHandler,
@@ -61,6 +63,44 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
     }
 
   });
+
+  // retrieves information about a user
+  app.get('/users/:email', BodyParser.json(), async (req, res) => {
+    try {
+      const result = await getUserInfoHandler({
+        email: req.params.email,
+      });
+      res.status(200)
+        .json(result);
+    } catch (err) {
+      logError(err);
+      res.status(500)
+        .json({
+          message: 'Internal server error, please see log in server for details',
+        });
+    }
+
+  });
+
+  // updates first and last names for user
+  app.patch('/users/:email', BodyParser.json(), async (req, res) => {
+    try {
+      const result = await updateUserInfoHandler({
+        email: req.params.email,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+      });
+      res.status(200)
+        .json(result);
+    } catch (err) {
+      logError(err);
+      res.status(500)
+        .json({
+          message: 'Internal server error, please see log in server for details',
+        });
+    }
+  });
+ 
 
   app.delete('/users/:email', BodyParser.json(), async (req, res) => {
     try {
