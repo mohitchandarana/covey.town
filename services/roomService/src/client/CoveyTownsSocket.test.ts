@@ -51,7 +51,7 @@ describe('TownServiceApiSocket', () => {
     TestUtils.cleanupSockets();
     await db.destroy();
   });
-  afterEach(async () => {
+  afterEach(() => {
     TestUtils.cleanupSockets();
   });
   it('Rejects invalid CoveyTownIDs, even if otherwise valid session token', async () => {
