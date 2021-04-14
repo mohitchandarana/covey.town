@@ -54,6 +54,9 @@ export async function logUser(email: string): Promise<void>  {
     await db('Users')
       .insert({
         'email': email,
+        'currentAvatar': 'misa',
+        'firstName': '',
+        'lastName': '',
       });
   }
 }
@@ -68,12 +71,14 @@ export async function getAllUserInfo(email: string): Promise<UserInfo> {
 }
 
 export async function setUserNames(email: string, firstName?: string, lastName?: string): Promise<void> {
-  await db('Users')
-    .where('email', email)
-    .update({
-      'firstName': firstName,
-      'lastName': lastName,
-    });
+  if (firstName || lastName) {
+    await db('Users')
+      .where('email', email)
+      .update({
+        'firstName': firstName,
+        'lastName': lastName,
+      });
+  }
 }
 
 export async function deleteUser(email: string): Promise<void> {

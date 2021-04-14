@@ -158,7 +158,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
   /**
    * List all saved towns for user
    */
-  app.get('/towns/:user', BodyParser.json(), async (req, res) => {
+  app.get('/savedTowns/:user', BodyParser.json(), async (req, res) => {
     try {
       const result = await savedTownHandler({ email: req.params.user });
       res.status(StatusCodes.OK)
@@ -176,7 +176,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
    * save town to user
    */
 
-  app.post('/towns/:user', BodyParser.json(), async (req, res) => {
+  app.post('/savedTowns/:user', BodyParser.json(), async (req, res) => {
     try {
       const result = await saveTownHandler({
         email: req.params.user,
@@ -196,11 +196,11 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
   /**
    * delete town from users saved towns
    */
-  app.delete('/towns/:user/:townID', BodyParser.json(), async (req, res) => {
+  app.delete('/savedTowns/:user/:townID', BodyParser.json(), async (req, res) => {
     try {
       const result = await deleteSavedTownHandler({
         email: req.params.user,
-        coveyTownID: req.body.townID,
+        coveyTownID: req.params.townID,
       });
       res.status(StatusCodes.OK)
         .json(result);

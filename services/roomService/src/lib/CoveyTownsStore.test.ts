@@ -49,7 +49,7 @@ describe('CoveyTownsStore', () => {
   afterEach(async () => {
     await deleteUser('TEST_USER');
     await deleteUser('TEST_USER_2');
-  })
+  });
 
   afterAll(async () => {
     await db.destroy();
@@ -425,7 +425,7 @@ describe('CoveyTownsStore', () => {
       const towns = await CoveyTownsStore.getInstance().then(instance =>
         instance.getSavedTowns('TEST_USER'));
       expect(towns.length)
-        .toBe(1)
+        .toBe(1);
       expect(towns[0].coveyTownID)
         .toBe((await town).coveyTownController.coveyTownID);
     });
@@ -474,7 +474,7 @@ describe('CoveyTownsStore', () => {
     });
     it('should not include deleted towns', async () => {
       const town = await createTownForTesting();
-      await saveTown('TEST_USER', town.coveyTownController.coveyTownID)
+      await saveTown('TEST_USER', town.coveyTownController.coveyTownID);
       await CoveyTownsStore.getInstance().then(instance =>
         instance.deleteTown(town.coveyTownController.coveyTownID, town.coveyTownPassword));
       const towns = await CoveyTownsStore.getInstance().then(instance =>
@@ -490,7 +490,7 @@ describe('CoveyTownsStore', () => {
         instance.getSavedTowns('TEST_USER'));
       expect(towns.length)
         .toBe(0);
-    })
+    });
   });
 });
 
