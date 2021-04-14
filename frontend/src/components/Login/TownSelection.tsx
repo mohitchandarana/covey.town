@@ -176,7 +176,7 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
 
   if(isAuthenticated){
 
-    apiClient.listSavedTowns({email: getEmail(isAuthenticated, user)})
+    apiClient.listSavedTowns({email: user.email})
       .then((towns) => {
         setSavedTowns(towns.towns
           .sort((a, b) => b.currentOccupancy - a.currentOccupancy)
@@ -185,7 +185,7 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
 
     savedTownsComponent = (<div>
       <Heading p="4" as="h4" size="md">Saved Towns</Heading>
-        <Box maxH="500px" overflowY="scroll">
+        <Box bg="#EBF8FF" maxH="500px" overflowY="scroll" borderWidth="1px" borderRadius="lg">
           <Table>
             <TableCaption placement="bottom">All Saved Towns</TableCaption>
             <Thead><Tr><Th>Town Name</Th><Th>Town ID</Th><Th>Town Type</Th><Th>Activity</Th></Tr></Thead>
