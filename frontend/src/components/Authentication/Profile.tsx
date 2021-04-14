@@ -47,22 +47,30 @@ interface ProfileProps {
   doLogin: (initData: TownJoinResponse) => Promise<boolean>
 }
 
+function getFirstName(user: any): string {
+  
+  return 'Guest';
+}
+
+
 export default function Profile({ doLogin }: ProfileProps): JSX.Element {
+
+  const { user } = useAuth0();
+  const { email } = user;
+
+  const [ firstName, setFirstName ] = useState<string>('');
+  const [ lastName, setLastName ] = useState<string>('');
 
   const [ currentAvatarPreview, setCurrentAvatarPreview ] = useState<string>('misa');
   const { buttonContainer, bodyDiv } = useStyles();
 
-  // const { myPlayerID, players } = useCoveyAppState();
-  // const myPlayer = players.find((player) => player.id === myPlayerID);
-  // const [ currentAvatar, setCurrentAvatar ] = useState<string>(myPlayer?.currentAvatar || 'misa');
+ 
   const [ avatarPreview, setAvatarPreview ] = useState<string>('misa');
-  const { user } = useAuth0();
   const [userName] = useState<string>(user.given_name  || user.nickname);
   const { connect } = useVideoContext();
 
-  const [ firstName, setFirstName ] = useState<string>('placeholder for firstName');
-  const [ lastName, setLastName ] = useState<string>('placeholder for lastName');
-  const [ email ] = useState<string>('placeholder for email');
+  
+  // const [ email ] = useState<string>('placeholder for email');
 
   // if (isAuthenticated) {
   //   setUserName();
@@ -118,6 +126,7 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
   const processUpdates = async (action: string) =>{
     if (action === 'edit'){
       // TODO: Add Database function
+
     }
   }
   
@@ -142,7 +151,7 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
                 <Stack align='center' direction='row'>
                   <FormControl>
                     <FormLabel htmlFor='firstName'>First Name</FormLabel>
-                    <Input id='firstName' placeholder="First Name" name="firstName" value={firstName} onChange={(ev)=>setFirstName(ev.target.value)} />
+                    <Input id='firstName' placeholder="Enter First Name" name="firstName" value={firstName} onChange={(ev)=>setFirstName(ev.target.value)} />
                   </FormControl>
                   <FormControl>
                     <FormLabel htmlFor='lastName'>Last Name</FormLabel>
