@@ -34,12 +34,12 @@ function generateTestLocation(): UserLocation {
 describe('CoveyTownController', () => {
   beforeAll(async () => {
     await logUser('TEST_USER');
-  })
+  });
   beforeEach(() => {
     mockGetTokenForTown.mockClear();
   });
   afterAll(async () => {
-    await deleteUser("TEST_USER");
+    await deleteUser('TEST_USER'   );
     await db.destroy();
   });
   it('constructor should set the coveyTownID property', () => { // Included in handout

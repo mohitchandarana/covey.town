@@ -1,4 +1,4 @@
- import { Express } from 'express';
+import { Express } from 'express';
 import BodyParser from 'body-parser';
 import io from 'socket.io';
 import { Server } from 'http';
