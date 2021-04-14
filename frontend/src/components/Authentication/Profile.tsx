@@ -68,13 +68,15 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
   const currentlySavedTowns: CoveyTownInfo[] = [];
   const toast = useToast();
 
-  const getAllUserInfo = useCallback(async () => {
+  const getAllUserInfo = useCallback( () => {
     
-    const userInfo = await apiClient.getUserInfo({email: user.email});
-    setEmail(userInfo.email);
-    setFirstName(userInfo.firstName || '');
-    setLastName(userInfo.lastName || '');
-  }, [apiClient, user.email]);  
+    apiClient.getUserInfo({email: user.email})
+      .then((userInfo) => {
+        setEmail(userInfo.email);
+        setFirstName(userInfo.firstName || '');
+        setLastName(userInfo.lastName || '');
+      }) 
+  }, [setEmail, user.email]);  
   
   useEffect(() => {
    getAllUserInfo(); 
