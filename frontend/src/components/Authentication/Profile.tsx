@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import assert from "assert";
 import {
   Box,
@@ -25,9 +25,10 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { makeStyles, Theme } from '@material-ui/core';
 import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
 import Video from '../../classes/Video/Video';
-import { CoveyTownInfo, TownJoinResponse, } from '../../classes/TownsServiceClient';
+import { CoveyTownInfo, TownJoinResponse, UserInfoResponse, } from '../../classes/TownsServiceClient';
 import IntroContainer from '../VideoCall/VideoFrontend/components/IntroContainer/IntroContainer';
 import BackHomeButton from './BackHomeButton';
+import useCoveyAppState from '../../hooks/useCoveyAppState';
 
 const useStyles = makeStyles((theme: Theme) => ({
   buttonContainer: {
@@ -47,17 +48,12 @@ interface ProfileProps {
   doLogin: (initData: TownJoinResponse) => Promise<boolean>
 }
 
-function getFirstName(user: any): string {
-  
-  return 'Guest';
-}
-
-
 export default function Profile({ doLogin }: ProfileProps): JSX.Element {
 
   const { user } = useAuth0();
-  const { email } = user;
+  const { apiClient } = useCoveyAppState();
 
+  const [ email, setEmail ] = useState<string>('');
   const [ firstName, setFirstName ] = useState<string>('');
   const [ lastName, setLastName ] = useState<string>('');
 
@@ -69,15 +65,21 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
   const [userName] = useState<string>(user.given_name  || user.nickname);
   const { connect } = useVideoContext();
 
-  
-  // const [ email ] = useState<string>('placeholder for email');
-
-  // if (isAuthenticated) {
-  //   setUserName();
-  // }
-  // TODO: getSavedTownsFromDataBase()
   const currentlySavedTowns: CoveyTownInfo[] = [];
   const toast = useToast();
+
+  const getAllUserInfo = useCallback(async () => {
+    
+    const userInfo = await apiClient.getUserInfo({email: user.email});
+    setEmail(userInfo.email);
+    setFirstName(userInfo.firstName || '');
+    setLastName(userInfo.lastName || '');
+  }, [apiClient, user.email]);  
+  
+  useEffect(() => {
+   getAllUserInfo(); 
+  }, [getAllUserInfo]);
+
 
   const handleJoin = useCallback(async (coveyRoomID: string) => {
     try {
@@ -126,9 +128,26 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
   const processUpdates = async (action: string) =>{
     if (action === 'edit'){
       // TODO: Add Database function
-
+      try {
+        await apiClient.updateUser({
+          email: 'mchan3008@gmail.com',
+          firstName,
+          lastName,
+        });
+        toast({
+          title: 'Info updated',
+          description: 'To see the updated info, please go back to the home page and click on your name',
+          status: 'success'
+        })
+      }catch(err){
+        toast({
+          title: 'Unable to update info',
+          description: err.toString(),
+          status: 'error'
+        });
+      }   
     }
-  }
+  };
   
   return (
     <div className={bodyDiv}>
