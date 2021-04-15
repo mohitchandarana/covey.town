@@ -312,9 +312,11 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
               Delete Account
             </Button>
             <AlertDialog
+              motionPreset="slideInBottom"
               isOpen={isOpen}
               leastDestructiveRef={cancelRef}
-              onClose={onClose}>
+              onClose={onClose}
+              isCentered>
               <AlertDialogOverlay>
                 <AlertDialogContent>
                   <AlertDialogHeader fontSize="lg" fontWeight="bold">
