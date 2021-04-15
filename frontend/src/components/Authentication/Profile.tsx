@@ -240,11 +240,26 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
         </Box>
         <Stack direction="row">
           <Select variant="filled" onChange={(ev)=>setAvatarPreview(ev.target.value)}>
-            <option value="misa">Misa </option>
+            <option value="aang">Aang</option>
+            <option value="beachcomber">BeachComber</option>
+            <option value="bob">Bob</option>
+            <option value="bossman">Bossman</option>
+            <option value="brute">Brute</option>
+            <option value="captain">Captain</option>
             <option value="catgirl">Catgirl</option>
-            <option value="spooky">Spooky </option>
             <option value="childactor">ChildActor</option>
-            <option value="beachcomber">BeachComber </option>
+            <option value="dragonrider">Dragonrider</option>
+            <option value="fisher">Fisher</option>
+            <option value="hacker">Hacker</option>
+            <option value="landbird">Landbird</option>
+            <option value="misa">Misa</option>
+            <option value="ninja">Ninja</option>
+            <option value="robot">Robot</option>
+            <option value="rookie">Rookie</option>
+            <option value="sami">Sami</option>
+            <option value="scientist">Scientist</option>
+            <option value="spooky">Spooky</option>
+            <option value="spyderboss">Spyderboss</option>
           </Select>
           <Button colorScheme="blue" onClick={()=>processUpdates('avatar')}> Save </Button>
         </Stack>
