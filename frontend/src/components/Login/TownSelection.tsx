@@ -22,6 +22,7 @@ import {
 } from '@chakra-ui/react';
 import { useAuth0 } from "@auth0/auth0-react";
 import { BsFillInfoCircleFill } from 'react-icons/bs';
+import { User } from '@auth0/auth0-react/dist/auth-state';
 import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
 import Video from '../../classes/Video/Video';
 import { CoveyTownInfo, CoveySavedTownInfo, TownJoinResponse, } from '../../classes/TownsServiceClient';
@@ -31,14 +32,14 @@ interface TownSelectionProps {
   doLogin: (initData: TownJoinResponse) => Promise<boolean>
 }
 
-function getEmail(isAuthenticated: boolean, user: any): string {
+function getEmail(isAuthenticated: boolean, user: User): string {
   if (isAuthenticated) {
     return user.email;
   }
   return 'Guest';
 }
 
-function getDefaultUsername(isAuthenticated:boolean, user: any){
+function getDefaultUsername(isAuthenticated:boolean, user: User){
   if(!isAuthenticated) {
     return 'Guest';
   }
