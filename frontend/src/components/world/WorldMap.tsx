@@ -54,6 +54,24 @@ class CoveyGameScene extends Phaser.Scene {
     this.load.tilemapTiledJSON('map', '/assets/tilemaps/tuxemon-town.json');
     this.load.atlas('misa', '/assets/atlas/atlas.png', '/assets/atlas/atlas.json');
     this.load.atlas('catgirl', '/assets/atlas/catgirl.png', '/assets/atlas/catgirl.json');
+    this.load.atlas('aang', '/assets/atlas/aang.png', '/assets/atlas/aang.json');
+    this.load.atlas('beachcomber', '/assets/atlas/beachcomber.png', '/assets/atlas/beachcomber.json');
+    this.load.atlas('bob', '/assets/atlas/bob.png', '/assets/atlas/bob.json');
+    this.load.atlas('bossman', '/assets/atlas/bossman.png', '/assets/atlas/bossman.json');
+    this.load.atlas('brute', '/assets/atlas/brute.png', '/assets/atlas/brute.json');
+    this.load.atlas('captain', '/assets/atlas/captain.png', '/assets/atlas/captain.json');
+    this.load.atlas('childactor', '/assets/atlas/childactor.png', '/assets/atlas/childactor.json');
+    this.load.atlas('dragonrider', '/assets/atlas/dragonrider.png', '/assets/atlas/dragonrider.json');
+    this.load.atlas('fisher', '/assets/atlas/fisher.png', '/assets/atlas/fisher.json');
+    this.load.atlas('hacker', '/assets/atlas/hacker.png', '/assets/atlas/hacker.json');
+    this.load.atlas('landbird', '/assets/atlas/landbird.png', '/assets/atlas/landbird.json');
+    this.load.atlas('ninja', '/assets/atlas/ninja.png', '/assets/atlas/ninja.json');
+    this.load.atlas('robot', '/assets/atlas/robot.png', '/assets/atlas/robot.json');
+    this.load.atlas('rookie', '/assets/atlas/rookie.png', '/assets/atlas/rookie.json');
+    this.load.atlas('sami', '/assets/atlas/sami.png', '/assets/atlas/sami.json');
+    this.load.atlas('scientist', '/assets/atlas/scientist.png', '/assets/atlas/scientist.json');
+    this.load.atlas('spooky', '/assets/atlas/spooky.png', '/assets/atlas/spooky.json');
+    this.load.atlas('spyderboss', '/assets/atlas/spyderboss.png', '/assets/atlas/spyderboss.json');
   }
 
   updatePlayersLocations(players: Player[]) {
