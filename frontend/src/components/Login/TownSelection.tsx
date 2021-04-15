@@ -59,8 +59,6 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
   const [userExists, setUserExists] = useState<boolean>(false);
 
   const updateUser = useCallback(async() => {
-    // ISSUE-> user.email is undefined
-    // i tried with other user values and nothing seems to be defined
     if (!userExists && isAuthenticated && user) {
 
       try {
@@ -76,14 +74,24 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
     setUserExists(true);
   }, [apiClient, isAuthenticated, toast, user, userExists]);
 
-  // const updateUser = () => {
-  //   // ISSUE-> user.email is undefined
-  //   // i tried with other user values and nothing seems to be defined
-  //   if (!userExists && isAuthenticated && user) {
-  //     apiClient.logUser({ email: user.email });
-  //   }
-  //   setUserExists(true);
-  // }
+  const updateSavedTownListings = useCallback(() => {
+    if(isAuthenticated){
+
+      apiClient.listSavedTowns({email: user.email})
+        .then((towns) => {
+          setSavedTowns(towns.towns
+            .sort((a, b) => b.currentOccupancy - a.currentOccupancy)
+          );
+        })
+        .catch((err) => {
+          toast({
+            title: 'Unable to get Saved Towns, probably because user does not have any',
+            description: err.toString(),
+            status: 'error'
+          })
+      }) 
+    }
+  }, [apiClient, isAuthenticated, toast, user.email])
 
   const updateTownListings = useCallback(() => {
     apiClient.listTowns()
@@ -96,12 +104,13 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
 
   useEffect(() => {
     updateUser();
+    updateSavedTownListings();
     updateTownListings();
     const timer = setInterval(updateTownListings, 2000);
     return () => {
       clearInterval(timer)
     };
-  }, [updateTownListings, updateUser]);
+  }, [updateSavedTownListings, updateTownListings, updateUser]);
 
   const handleJoin = useCallback(async (coveyRoomID: string) => {
     try {
@@ -193,13 +202,6 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
     </Box></div>;
 
   if(isAuthenticated){
-
-    apiClient.listSavedTowns({email: user.email})
-      .then((towns) => {
-        setSavedTowns(towns.towns
-          .sort((a, b) => b.currentOccupancy - a.currentOccupancy)
-        );
-      })
 
     savedTownsComponent = (<div>
       <Heading p="4" as="h4" size="md">Saved Towns</Heading>

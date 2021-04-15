@@ -244,7 +244,6 @@ export default class TownsServiceClient {
   }
 
   async updateUserAvatar(requestData: UpdateAvatarRequest): Promise<void> {
-    console.log(requestData);
     const responseWrapper = await this._axios.patch(`/avatars/${requestData.email}`, requestData);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper, true);
   }

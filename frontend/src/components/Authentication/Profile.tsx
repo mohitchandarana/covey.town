@@ -60,7 +60,6 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
   const [ currentAvatarPreview, setCurrentAvatarPreview ] = useState<string>('');
   const { buttonContainer, bodyDiv } = useStyles();
 
- 
   const [ avatarPreview, setAvatarPreview ] = useState<string>('misa');
   const [userName] = useState<string>(user.given_name  || user.nickname);
   const { connect } = useVideoContext();
