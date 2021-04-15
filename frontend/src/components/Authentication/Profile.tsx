@@ -31,7 +31,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { makeStyles, } from '@material-ui/core';
 import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
 import Video from '../../classes/Video/Video';
-import { CoveyTownInfo, TownJoinResponse, } from '../../classes/TownsServiceClient';
+import { CoveySavedTownInfo, TownJoinResponse, } from '../../classes/TownsServiceClient';
 import IntroContainer from '../VideoCall/VideoFrontend/components/IntroContainer/IntroContainer';
 import BackHomeButton from './BackHomeButton';
 import useCoveyAppState from '../../hooks/useCoveyAppState';
@@ -333,19 +333,19 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
         <Heading p="4" as="h4" size="md">Saved Towns</Heading>
             <Box maxH="500px" overflowY="scroll">
               <Table>
-                <Thead><Tr><Th>Town Name</Th><Th>Town ID</Th><Th>Town Type</Th><Th>Activity</Th><Th>Actions</Th></Tr></Thead>
+                <Thead><Tr><Th>Town Name</Th><Th>Town ID</Th><Th>Town Type</Th><Th>Actions</Th><Th>Activity</Th></Tr></Thead>
                 <Tbody>
-                  {currentlySavedTowns?.map((town) => (
+                  {savedTowns?.map((town) => (
                     <Tr key={town.coveyTownID}><Td role='cell'>{town.friendlyName}</Td><Td
                       role='cell'>{town.coveyTownID}</Td>
-                      <Td role='cell'>Public/Private</Td>
-                      <Td role='cell'>{town.currentOccupancy}/{town.maximumOccupancy}</Td>
+                      <Td role='cell'>{town.publicStatus}</Td>
                       <Td role='cell'><Button onClick={() => handleJoin(town.coveyTownID)}
                                         disabled={town.currentOccupancy >= town.maximumOccupancy}>Connect
                                       </Button>
-                                      <Button onClick={() => handleUnsave(town.coveyTownID)}>Unsave
+                                      <Button colorScheme="red" onClick={() => handleUnsave(town.coveyTownID)}>Unsave
                                       </Button>
-                                      </Td></Tr>
+                      </Td>
+                      <Td role='cell'>{town.currentOccupancy}/{town.maximumOccupancy}</Td></Tr>
                   ))}
                 </Tbody>
               </Table>
