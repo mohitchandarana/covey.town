@@ -1997,8 +1997,8 @@
 	"frame": {"x":376,"y":193,"w":16,"h":22},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":0,"y":10,"w":30,"h":43},
-	"sourceSize": {"w":16,"h":32}
+	"spriteSourceSize": {"x":0,"y":10,"w":16,"h":22},
+	"sourceSize": {"w":32,"h":64}
 },
 "misa-left-walk.000.png":
 {
