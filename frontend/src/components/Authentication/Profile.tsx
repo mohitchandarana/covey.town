@@ -22,7 +22,7 @@ import {
 } from '@chakra-ui/react';
 import { BsFillInfoCircleFill } from 'react-icons/bs';
 import { useAuth0 } from "@auth0/auth0-react";
-import { makeStyles, Theme } from '@material-ui/core';
+import { makeStyles, } from '@material-ui/core';
 import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
 import Video from '../../classes/Video/Video';
 import { CoveyTownInfo, TownJoinResponse, } from '../../classes/TownsServiceClient';
@@ -30,7 +30,7 @@ import IntroContainer from '../VideoCall/VideoFrontend/components/IntroContainer
 import BackHomeButton from './BackHomeButton';
 import useCoveyAppState from '../../hooks/useCoveyAppState';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   buttonContainer: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -125,38 +125,51 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
     }
   }, [doLogin, userName, connect, toast]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setAvatarPreview(event.target.value);
-  };
-
-
-  const handleSave = () => {
-    setCurrentAvatarPreview(avatarPreview);  
-    // TODO: Add Database function
-  };
-
   const processUpdates = async (action: string) =>{
-    if (action === 'edit'){
-      // TODO: Add Database function
-      try {
-        await apiClient.updateUser({
-          email,
-          firstName,
-          lastName,
-        });
-        toast({
-          title: 'Info updated',
-          description: 'To see the updated info, please go back to the home page and click on your name',
-          status: 'success'
-        })
-
-      }catch(err){
-        toast({
-          title: 'Unable to update info',
-          description: err.toString(),
-          status: 'error'
-        });
-      }   
+   
+    switch (action) {
+      case 'edit':
+        try {
+          await apiClient.updateUser({
+            email,
+            firstName,
+            lastName,
+          });
+          toast({
+            title: 'User Information updated',
+            status: 'success'
+          });
+  
+        } catch(err) {
+          toast({
+            title: 'Unable to update info',
+            description: err.toString(),
+            status: 'error'
+          });
+        }   
+        break;
+      case 'avatar':  
+        try {
+          await apiClient.updateUserAvatar({
+            email,
+            avatar: avatarPreview,
+          });
+          toast({
+            title: 'User Avatar updated',
+            status: 'success'
+          });
+          setCurrentAvatarPreview(avatarPreview);
+        } catch(err) {
+          toast({
+            title: 'Unable to update avatar',
+            description: err.toString(),
+            status: 'error'
+          }); 
+        }
+        break;
+    
+      default:
+        break;
     }
   };
   
@@ -227,14 +240,14 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
           </Center>
         </Box>
         <Stack direction="row">
-          <Select variant="filled" onChange={handleChange}>
+          <Select variant="filled" onChange={(ev)=>setAvatarPreview(ev.target.value)}>
             <option value="misa">Misa </option>
             <option value="catgirl">Catgirl</option>
             <option value="female">Spooky </option>
             <option value="childactor">ChildActor</option>
             <option value="beachcomber">BeachComber </option>
           </Select>
-          <Button colorScheme="blue" onClick={handleSave}> Save </Button>
+          <Button colorScheme="blue" onClick={()=>processUpdates('avatar')}> Save </Button>
         </Stack>
         
         <Heading p="4" as="h4" size="md">Saved Towns</Heading>

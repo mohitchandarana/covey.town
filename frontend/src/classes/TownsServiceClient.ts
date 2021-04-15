@@ -189,7 +189,6 @@ export default class TownsServiceClient {
   }
 
   async updateUser(requestData: UpdateUserRequest): Promise<void> {
-    console.log(requestData);
     const responseWrapper = await this._axios.patch<ResponseEnvelope<void>>(`/users/${requestData.email}`, requestData);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper, true);
   }
@@ -245,8 +244,9 @@ export default class TownsServiceClient {
   }
 
   async updateUserAvatar(requestData: UpdateAvatarRequest): Promise<void> {
+    console.log(requestData);
     const responseWrapper = await this._axios.patch(`/avatars/${requestData.email}`, requestData);
-    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper, true);
   }
 
 
