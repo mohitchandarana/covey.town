@@ -75,7 +75,7 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
   }, [apiClient, isAuthenticated, toast, user, userExists]);
 
   const updateSavedTownListings = useCallback(() => {
-    if(isAuthenticated){
+    if (!userExists && isAuthenticated && user) {
 
       apiClient.listSavedTowns({email: user.email})
         .then((towns) => {
@@ -91,7 +91,7 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
           })
       }) 
     }
-  }, [apiClient, isAuthenticated, toast, user.email])
+  }, [apiClient, isAuthenticated, toast, user, userExists])
 
   const updateTownListings = useCallback(() => {
     apiClient.listTowns()
