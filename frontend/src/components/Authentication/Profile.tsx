@@ -1,6 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import assert from "assert";
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
   Box,
   Button,
   Center,
@@ -49,8 +55,8 @@ interface ProfileProps {
 }
 
 export default function Profile({ doLogin }: ProfileProps): JSX.Element {
-
-  const { user } = useAuth0();
+  
+  const { user, logout } = useAuth0();
   const { apiClient } = useCoveyAppState();
 
   const [ email, setEmail ] = useState<string>('');
@@ -66,6 +72,10 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
 
   const currentlySavedTowns: CoveyTownInfo[] = [];
   const toast = useToast();
+
+  const [isOpen, setIsOpen] = React.useState(false)
+  const onClose = () => setIsOpen(false)
+  const cancelRef = React.useRef() as React.MutableRefObject<HTMLButtonElement>;
 
   const getAllUserInfo = useCallback( () => {
     apiClient.getUserInfo({email: user.email})
@@ -166,6 +176,24 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
           }); 
         }
         break;
+      case 'delete':  
+      try {
+        await apiClient.deleteUser({
+          email,
+        });
+        toast({
+          title: 'User Account deleted',
+          status: 'success'
+        });
+        logout({ returnTo: window.location.origin });
+      } catch(err) {
+        toast({
+          title: 'Unable to delete account',
+          description: err.toString(),
+          status: 'error'
+        }); 
+      }
+      break;  
     
       default:
         break;
@@ -280,9 +308,35 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
                 </Tbody>
               </Table>
             </Box>
-            <Button data-testid='deletebutton' colorScheme="red" mr={3} value="delete" name='action1' >
+            <Button data-testid='deletebutton' colorScheme="red" mr={3} onClick={()=>setIsOpen(true)} >
               Delete Account
             </Button>
+            <AlertDialog
+              isOpen={isOpen}
+              leastDestructiveRef={cancelRef}
+              onClose={onClose}>
+              <AlertDialogOverlay>
+                <AlertDialogContent>
+                  <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                    Delete Account
+                  </AlertDialogHeader>
+
+                  <AlertDialogBody>
+                    Are you sure? You cannot undo this action afterwards.
+                  </AlertDialogBody>
+
+                  <AlertDialogFooter>
+                    <Button ref={cancelRef} onClick={onClose}>
+                      Cancel
+                    </Button>
+                    <Button colorScheme="red" onClick={()=>processUpdates('delete')} ml={3}>
+                      Delete
+                    </Button>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialogOverlay>
+            </AlertDialog>
+
       </Stack>
     </IntroContainer>
     </div>
