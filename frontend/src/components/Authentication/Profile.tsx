@@ -75,8 +75,15 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
         setEmail(userInfo.email);
         setFirstName(userInfo.firstName || '');
         setLastName(userInfo.lastName || '');
+      })
+      .catch((err) => {
+          toast({
+            title: 'Unable to get User info',
+            description: err.toString(),
+            status: 'error'
+          })
       }) 
-  }, [setEmail, user.email]);  
+  }, [apiClient, toast, user.email]);  
   
   useEffect(() => {
    getAllUserInfo(); 

@@ -58,17 +58,34 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
   const toast = useToast();
   const [userExists, setUserExists] = useState<boolean>(false);
 
-  const updateUser = () => {
+  const updateUser = useCallback(async() => {
     // ISSUE-> user.email is undefined
     // i tried with other user values and nothing seems to be defined
     if (!userExists && isAuthenticated && user) {
-      apiClient.logUser({ email: user.email });
+
+      try {
+        await apiClient.logUser({ email: user.email });
+      } catch (err) {
+        toast({
+          title: 'apiClient.logUser failed',
+          description: err.toString(),
+          status: 'error'
+        })
+      }
     }
     setUserExists(true);
-  }
+  }, [apiClient, isAuthenticated, toast, user, userExists]);
+
+  // const updateUser = () => {
+  //   // ISSUE-> user.email is undefined
+  //   // i tried with other user values and nothing seems to be defined
+  //   if (!userExists && isAuthenticated && user) {
+  //     apiClient.logUser({ email: user.email });
+  //   }
+  //   setUserExists(true);
+  // }
 
   const updateTownListings = useCallback(() => {
-    // console.log(apiClient);
     apiClient.listTowns()
       .then((towns) => {
         setCurrentPublicTowns(towns.towns
@@ -76,6 +93,7 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
         );
       })
   }, [setCurrentPublicTowns, apiClient]);
+
   useEffect(() => {
     updateUser();
     updateTownListings();
@@ -83,7 +101,7 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
     return () => {
       clearInterval(timer)
     };
-  }, [updateTownListings]);
+  }, [updateTownListings, updateUser]);
 
   const handleJoin = useCallback(async (coveyRoomID: string) => {
     try {
