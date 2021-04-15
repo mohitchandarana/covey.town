@@ -70,7 +70,7 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
   const [userName] = useState<string>(user.given_name  || user.nickname);
   const { connect } = useVideoContext();
 
-  const currentlySavedTowns: CoveyTownInfo[] = [];
+  const [savedTowns, setSavedTowns] = useState<CoveySavedTownInfo[]>();
   const toast = useToast();
 
   const [isOpen, setIsOpen] = React.useState(false)
@@ -95,9 +95,29 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
 
   }, [apiClient, toast, user.email]);  
   
+  const updateSavedTownListings = useCallback(() => {
+    if (user) {
+
+      apiClient.listSavedTowns({email: user.email})
+        .then((towns) => {
+          setSavedTowns(towns.towns
+            .sort((a, b) => b.currentOccupancy - a.currentOccupancy)
+          );
+        })
+        .catch((err) => {
+          toast({
+            title: 'Unable to get Saved Towns',
+            description: err.toString(),
+            status: 'error'
+          })
+      }) 
+    }
+  }, [apiClient, toast, user])
+
   useEffect(() => {
-   getAllUserInfo(); 
-  }, [getAllUserInfo]);
+   getAllUserInfo();
+   updateSavedTownListings(); 
+  }, [getAllUserInfo, updateSavedTownListings]);
 
 
   const handleJoin = useCallback(async (coveyRoomID: string) => {
@@ -133,9 +153,28 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
       })
     }
   }, [doLogin, userName, connect, toast]);
+  
+  const handleUnsave = useCallback(async (coveyTownID: string) => {
+    try {
+      await apiClient.deleteSavedTown({
+        email,
+        townID: coveyTownID
+      });
+      toast({
+        title: 'Removed Town from Saved Towns List!',
+        status: 'success'
+      });
+      updateSavedTownListings();
+    } catch (err) {
+      toast({
+        title: 'Unable to unsave town',
+        description: err.toString(),
+        status: 'error'
+      })
+    }
+  }, [apiClient, email, toast, updateSavedTownListings]);
 
   const processUpdates = async (action: string) =>{
-   
     switch (action) {
       case 'edit':
         try {
@@ -193,8 +232,7 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
           status: 'error'
         }); 
       }
-      break;  
-    
+        break;
       default:
         break;
     }
@@ -295,15 +333,19 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
         <Heading p="4" as="h4" size="md">Saved Towns</Heading>
             <Box maxH="500px" overflowY="scroll">
               <Table>
-                <Thead><Tr><Th>Town Name</Th><Th>Town ID</Th><Th>Town Type</Th><Th>Activity</Th></Tr></Thead>
+                <Thead><Tr><Th>Town Name</Th><Th>Town ID</Th><Th>Town Type</Th><Th>Activity</Th><Th>Actions</Th></Tr></Thead>
                 <Tbody>
                   {currentlySavedTowns?.map((town) => (
                     <Tr key={town.coveyTownID}><Td role='cell'>{town.friendlyName}</Td><Td
                       role='cell'>{town.coveyTownID}</Td>
                       <Td role='cell'>Public/Private</Td>
-                      <Td role='cell'>{town.currentOccupancy}/{town.maximumOccupancy}
-                        <Button onClick={() => handleJoin(town.coveyTownID)}
-                                disabled={town.currentOccupancy >= town.maximumOccupancy}>Connect</Button></Td></Tr>
+                      <Td role='cell'>{town.currentOccupancy}/{town.maximumOccupancy}</Td>
+                      <Td role='cell'><Button onClick={() => handleJoin(town.coveyTownID)}
+                                        disabled={town.currentOccupancy >= town.maximumOccupancy}>Connect
+                                      </Button>
+                                      <Button onClick={() => handleUnsave(town.coveyTownID)}>Unsave
+                                      </Button>
+                                      </Td></Tr>
                   ))}
                 </Tbody>
               </Table>

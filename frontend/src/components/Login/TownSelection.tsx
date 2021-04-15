@@ -38,7 +38,7 @@ function getEmail(isAuthenticated: boolean, user: any): string {
   return 'Guest';
 }
 
-function getDefaultUsername(isAuthenticated:boolean, user:any){
+function getDefaultUsername(isAuthenticated:boolean, user: any){
   if(!isAuthenticated) {
     return 'Guest';
   }
@@ -85,7 +85,7 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
         })
         .catch((err) => {
           toast({
-            title: 'Unable to get Saved Towns, probably because user does not have any',
+            title: 'Unable to get Saved Towns',
             description: err.toString(),
             status: 'error'
           })
