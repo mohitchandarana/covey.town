@@ -242,7 +242,7 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
           <Select variant="filled" onChange={(ev)=>setAvatarPreview(ev.target.value)}>
             <option value="misa">Misa </option>
             <option value="catgirl">Catgirl</option>
-            <option value="female">Spooky </option>
+            <option value="spooky">Spooky </option>
             <option value="childactor">ChildActor</option>
             <option value="beachcomber">BeachComber </option>
           </Select>
