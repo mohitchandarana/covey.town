@@ -25,7 +25,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { makeStyles, Theme } from '@material-ui/core';
 import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
 import Video from '../../classes/Video/Video';
-import { CoveyTownInfo, TownJoinResponse, UserInfoResponse, } from '../../classes/TownsServiceClient';
+import { CoveyTownInfo, TownJoinResponse, } from '../../classes/TownsServiceClient';
 import IntroContainer from '../VideoCall/VideoFrontend/components/IntroContainer/IntroContainer';
 import BackHomeButton from './BackHomeButton';
 import useCoveyAppState from '../../hooks/useCoveyAppState';
@@ -57,7 +57,7 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
   const [ firstName, setFirstName ] = useState<string>('');
   const [ lastName, setLastName ] = useState<string>('');
 
-  const [ currentAvatarPreview, setCurrentAvatarPreview ] = useState<string>('misa');
+  const [ currentAvatarPreview, setCurrentAvatarPreview ] = useState<string>('');
   const { buttonContainer, bodyDiv } = useStyles();
 
  
@@ -69,12 +69,12 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
   const toast = useToast();
 
   const getAllUserInfo = useCallback( () => {
-    
     apiClient.getUserInfo({email: user.email})
       .then((userInfo) => {
         setEmail(userInfo.email);
         setFirstName(userInfo.firstName || '');
         setLastName(userInfo.lastName || '');
+        setCurrentAvatarPreview(userInfo.currentAvatar);
       })
       .catch((err) => {
           toast({
@@ -83,6 +83,7 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
             status: 'error'
           })
       }) 
+
   }, [apiClient, toast, user.email]);  
   
   useEffect(() => {
@@ -139,7 +140,7 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
       // TODO: Add Database function
       try {
         await apiClient.updateUser({
-          email: 'mchan3008@gmail.com',
+          email,
           firstName,
           lastName,
         });
@@ -148,6 +149,7 @@ export default function Profile({ doLogin }: ProfileProps): JSX.Element {
           description: 'To see the updated info, please go back to the home page and click on your name',
           status: 'success'
         })
+
       }catch(err){
         toast({
           title: 'Unable to update info',

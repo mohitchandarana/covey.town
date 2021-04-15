@@ -71,6 +71,7 @@ export async function getAllUserInfo(email: string): Promise<UserInfo> {
 }
 
 export async function setUserNames(email: string, firstName?: string, lastName?: string): Promise<void> {
+  
   if (firstName || lastName) {
     await db('Users')
       .where('email', email)

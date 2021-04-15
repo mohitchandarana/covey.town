@@ -189,13 +189,14 @@ export default class TownsServiceClient {
   }
 
   async updateUser(requestData: UpdateUserRequest): Promise<void> {
-    const responseWrapper = await this._axios.patch<ResponseEnvelope<void>>(`/users/${requestData.email}`);
+    console.log(requestData);
+    const responseWrapper = await this._axios.patch<ResponseEnvelope<void>>(`/users/${requestData.email}`, requestData);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper, true);
   }
 
   async getUserInfo(requestData: UserInfoRequest): Promise<UserInfoResponse> {
     const responseWrapper = await this._axios.get<ResponseEnvelope<UserInfoResponse>>(`/users/${requestData.email}`);
-    return TownsServiceClient.unwrapOrThrowError(responseWrapper, true);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
   async createTown(requestData: TownCreateRequest): Promise<TownCreateResponse> {

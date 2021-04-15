@@ -84,6 +84,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
 
   // updates first and last names for user
   app.patch('/users/:email', BodyParser.json(), async (req, res) => {
+    console.log(req.body);
     try {
       const result = await updateUserInfoHandler({
         email: req.params.email,
