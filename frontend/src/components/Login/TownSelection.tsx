@@ -104,14 +104,17 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
   }, [setCurrentPublicTowns, apiClient]);
 
   useEffect(() => {
-    updateUser();
-    updateSavedTownListings();
     updateTownListings();
     const timer = setInterval(updateTownListings, 2000);
     return () => {
       clearInterval(timer)
     };
-  }, [updateSavedTownListings, updateTownListings, updateUser]);
+  }, [updateTownListings]);
+
+  useEffect(() => {
+    updateUser();
+    updateSavedTownListings();
+  })
 
   const handleJoin = useCallback(async (coveyRoomID: string) => {
     try {
