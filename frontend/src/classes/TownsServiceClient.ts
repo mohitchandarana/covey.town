@@ -219,18 +219,18 @@ export default class TownsServiceClient {
   }
 
   async listSavedTowns(requestData: SavedTownsRequest): Promise<SavedTownListResponse> {
-    const responseWrapper = await this._axios.get<ResponseEnvelope<SavedTownListResponse>>(`/towns/${requestData.email}`);
+    const responseWrapper = await this._axios.get<ResponseEnvelope<SavedTownListResponse>>(`/savedTowns/${requestData.email}`);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
   async saveTown(requestData: SaveTownRequest): Promise<void> {
-    const responseWrapper = await this._axios.post<ResponseEnvelope<void>>(`/towns/${requestData.email}`, requestData);
-    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+    const responseWrapper = await this._axios.post<ResponseEnvelope<void>>(`/savedTowns/${requestData.email}`, requestData);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper, true);
   }
 
   async deleteSavedTown(requestData: DeleteTownRequest): Promise<void> {
-    const responseWrapper = await this._axios.delete<ResponseEnvelope<void>>(`/towns/${requestData.email}/${requestData.townID}`);
-    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+    const responseWrapper = await this._axios.delete<ResponseEnvelope<void>>(`/savedTowns/${requestData.email}/${requestData.townID}`);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper, true);
   }
 
   async joinTown(requestData: TownJoinRequest): Promise<TownJoinResponse> {

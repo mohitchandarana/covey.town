@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import assert from 'assert';
 import { UserLocation } from '../CoveyTypes';
+import { SavedTownListResponse } from '../requestHandlers/CoveyTownRequestHandlers';
 
 
 export type ServerPlayer = { _id: string, _userName: string, location: UserLocation };
@@ -210,7 +211,7 @@ export default class TownsServiceClient {
   }
 
   async listSavedTowns(requestData: SavedTownsRequest): Promise<TownListResponse> {
-    const responseWrapper = await this._axios.get<ResponseEnvelope<TownListResponse>>(`/savedTowns/${requestData.email}`);
+    const responseWrapper = await this._axios.get<ResponseEnvelope<SavedTownListResponse>>(`/savedTowns/${requestData.email}`);
     return TownsServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
