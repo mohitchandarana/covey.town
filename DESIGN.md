@@ -4,7 +4,9 @@
 Below is a list of components that were added to the existing codebase or modified in the frontend, along with their responsibilities and collaborators.
 
 **TownsServiceClient**:
-1. <Kristi>
+1. Additional hooks were added to the TownsServiceClient in order to accommodate the additional features in the frontend. This included creating, updating, retrieving, and deleting user information, retrieving and updating a user’s avatar, and saving, unsaying, and retrieving saved towns for a particular user. 
+2.  Routes to /savedTowns, /users, and /avatars were added to the pre-existing /towns routes to allow for REST communication between the townsServiceClient and the backend of our application
+
 
 **Authentication**: 
 1. *AuthHero.tsx*: This component represents a log-in button if there is no user logged in, or a log out button if a user is logged in. We utilize the `useAuth0()` hook for handling authentication all throughout the codebase, and in this particular case to determine whether or not the user has been authenticated. This component collaborates with *PreJoinScreens.tsx*, where it gets rendered.
@@ -27,4 +29,17 @@ Below is a list of components that were added to the existing codebase or modifi
 
 ### Backend
 Below is a list of components that were added to the existing codebase or modified in the backend, along with their responsibilities and collaborators.
-<Kristi>
+
+1. “CoveyTownsStore.ts” : this class was modified to utilize the database as opposed to the coveyTownController to store/retrieve town information such as the coveyTownPassword, friendlyName, and public status.  
+a. When a townsStore is initialized it populates its _towns with all towns currently stored in the database to preserve the state of the app in the case that it needs to be restarted
+b. createTown() now creates the coveyTownID and password, initializes/stores the town’s coveyTownController, and sends the town’s information to the database for storage.
+c. listTowns() now retrieved public town information from the database and matches the coveyTownIDs with the appropriate controllers to acquire capacity/player information for those towns.
+d. deleteTown() now removes the town from the database as well as the controller from the townsStore.
+e. updateTown() was potentially makes two calls to the database (one for friendlyName, one for publicStatus changes) in order to update those values
+f. Additional methods  getSavedTowns(user)  was added to the class as well in order to retrieve a users saved towns from the database and pair them with the appropriate townController information.
+
+2. “coveyTownController”: this class was modified so that information stored in the database was not duplicated in the apps local storage.  The class functions in the same way with the only modification being coveyTownPassword, friendlyName, and publicStatus no longer being stored within each town’s controller.
+
+3. “databaseService.ts”: this file contains all functions that access the database through a knex connection.  
+
+4. “knexfile.ts”: this file hosts the knex connection to the Postgres database, ensuring that only one connection exists at a time.
