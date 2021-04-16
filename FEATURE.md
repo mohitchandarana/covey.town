@@ -10,7 +10,7 @@
 
   - Step 4: Click on your name (in the welcome message that says (Welcome, <your name>) to go to your profile!)
 
-  ![](./images/redirect.png)
+  ![](./images/redirect.PNG)
 
 **Feature Update 2 - Choosing an Avatar and saving it to Profile**
 
@@ -30,7 +30,7 @@
 
   - Step 8: Create a new Town or Join an existing one to see your new Avatar in action!
 
-  ![](./images/profile.png)
+  ![](./images/profile.PNG)
 
 **Feature Update 3 - Saving any Town (Public/Private) to Profile**
 
