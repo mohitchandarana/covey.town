@@ -47,4 +47,4 @@ In the `frontend` directory, run `npm start` (again, you'll need to run `npm ins
 The frontend will automatically re-compile and reload in your browser if you change any files in the `frontend/src` directory.\
 
 ### Running on Netlify
-Use this link https://hungry-mccarthy-996bbb.netlify.app/home to launch.
+Use this link https://hungry-mccarthy-996bbb.netlify.app/ to launch.
