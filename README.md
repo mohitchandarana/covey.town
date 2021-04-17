@@ -12,6 +12,10 @@ The frontend implements video chat using the [Twilio Programmable Video](https:/
 
 A backend service (in the `services/roomService` directory) implements the application logic: tracking which "towns" are available to be joined, and the state of each of those towns.
 
+### Running on Netlify
+
+Use this link https://hungry-mccarthy-996bbb.netlify.app/ to launch.
+
 ## Running this app locally
 
 Running the application locally entails running both the backend service and a frontend.
@@ -31,9 +35,6 @@ To create an account and configure your local environment:
 | `TWILIO_API_KEY_SID`    | The SID of the new API key you created.   |
 | `TWILIO_API_KEY_SECRET` | The secret for the API key you created.   |
 | `TWILIO_API_AUTH_TOKEN` | Visible on your twilio account dashboard. |
-
-### Running on Netlify
-Use this link https://hungry-mccarthy-996bbb.netlify.app/ to launch.
 
 ### Starting the backend
 
