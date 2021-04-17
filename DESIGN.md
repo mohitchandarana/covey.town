@@ -47,24 +47,24 @@ f. Additional methods  getSavedTowns(user)  was added to the class as well in or
 
 ### UML Diagram for the Database
 
-![](./images/uml.png)
+![](uml.png)
 
 
 ### Sequence Diagram for Save Towns API
 
-![](./images/save_towns_sequence.png)
+![](save_towns_sequence.png)
 
 
 ### Sequence Diagram for the Towns API
 
-![](./images/towns_sequence.png)
+![](towns_sequence.png)
 
 
 ### Sequence Diagram for Users API
 
-![](./images/users_sequence.png)
+![](users_sequence.png)
 
 
 ### Sequence Diagram for Avatars API
 
-![](./images/avatars_sequence.png)
+![](avatars_sequence.png)
